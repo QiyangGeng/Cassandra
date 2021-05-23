@@ -1,0 +1,22 @@
+<Configuration status="DEBUG">
+    <Appenders>
+        <Console name="Cassandra.Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%d{ABSOLUTE}][%t] %-5level %logger{36} — %m%n"/>
+        </Console>
+
+        <RollingRandomAccessFile name="File" fileName="logs/Cassandra.log" filePattern="logs/$${date:yyyy-MM}/Cassandra-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout pattern="%d %p %c{1.} [%t] %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="6 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="100"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+    <Loggers>
+        <AsyncRoot level="DEBUG">
+            <AppenderRef ref="Cassandra.Console"/>
+            <AppenderRef ref="File"/>
+        </AsyncRoot>
+    </Loggers>
+</Configuration>
