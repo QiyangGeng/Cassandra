@@ -93,7 +93,7 @@ public final class EventListenerManager {
      * @param eventType The type of event to listen to
      * @param operator What to do with the event
      */
-    public <E extends GenericEvent> EventListenerManager registerOperator(@Nonnull Class<E> eventType, @Nonnull Consumer<E> operator) {
+    public <E extends GenericEvent> EventListenerManager registerPersistentOperator(@Nonnull Class<E> eventType, @Nonnull Consumer<E> operator) {
         return registerOperator(eventType, event -> {
             operator.accept(event);
             return false;
@@ -107,7 +107,7 @@ public final class EventListenerManager {
      * @param lifetime How long to wait for this event to occur
      * @param unit The time unit for the given lifetime
      */
-    public <E extends GenericEvent> EventListenerManager registerOperator(@Nonnull Class<E> eventType, @Nonnull Consumer<E> operator, long lifetime, TimeUnit unit) {
+    public <E extends GenericEvent> EventListenerManager registerPersistentOperator(@Nonnull Class<E> eventType, @Nonnull Consumer<E> operator, long lifetime, TimeUnit unit) {
         return registerOperator(eventType, event -> {
             operator.accept(event);
             return false;
