@@ -73,28 +73,21 @@ public final class DiscordBot {
             readyPreparations();
             logger.info("Discord bot ready");
             ready = true;
-            return false;
         }).registerOperator(DisconnectEvent.class, event -> {
             logger.info("Discord bot disconnected");
             ready = false;
-            return false;
         }).registerOperator(ReconnectedEvent.class, event -> {
             logger.info("Discord bot reconnected");
             ready = true;
-            return false;
         }).registerOperator(ShutdownEvent.class, event -> {
             logger.info("Discord bot shutdown");
             ready = false;
-            return false;
         }).registerOperator(GuildJoinEvent.class, event -> {
             logger.info("Discord bot joined guild: " + event.getGuild().getName());
-            return false;
         }).registerOperator(GuildLeaveEvent.class, event -> {
             logger.info("Discord bot left guild: " + event.getGuild().getName());
-            return false;
         }).registerOperator(SelfUpdateAvatarEvent.class, event -> {
             avatarAverageColor = UtilImage.averageColor(event.getNewAvatarUrl());
-            return false;
         });
     }
     
