@@ -4,6 +4,15 @@ and communicates with Discord using the popular event-driven API [JDA](https://g
 
 This is a toy project, and there is no plan for the bot to become publicly available. However, the code is all here...
 
+## Contents
+- [Summary](#Summary)
+- [Overview](#Overview)
+    - [DiscordBot Class](#DiscordBot Class)
+    - [Event Handling](#Event Handling)
+    - [Command](#Command)
+    - [Console](#Console)
+- [TODOs](#TODOs)
+
 ## Summary
 The purposes of this project is applying OO concepts, learning relevant design patterns, and exploring various interesting
 APIs. As such,
@@ -96,7 +105,8 @@ cause no harm for the bot to wipe its own record from a private channel; however
 on a guild channel will mostly likely prove disastrous.
 
 ### Console
-A basic CLI is available for the program. At the moment, the only thing it allows for is the proper exit of the application.
+A basic CLI is available for the program. At the moment, the only thing implemented is starting the proper exit of the 
+application.
 
 ## TODOs
 Finally, here is a non-inclusive list of things I am considering getting done:
