@@ -13,7 +13,7 @@ public class cmd_Disabled extends Command {
     @Override
     boolean execute(CommandContainer cc) {
         cc.event.getChannel().sendMessage("what").queue();
-        return true;
+        return false;
     }
     
     @Override

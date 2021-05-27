@@ -44,7 +44,7 @@ public class cmd_Clear extends Command {
             }
             return messages.size() < CAPACITY;
         }).thenRun(() -> cc.event.getChannel().purgeMessagesById(messages));
-        return true;
+        return false;
     }
     
     @Override

@@ -31,7 +31,7 @@ public class cmd_Relation extends Command {
         BufferedImage renderedGraph = UtilGraph.renderWithColouredVertices(graph, new CircleLayoutAlgorithm<>());
         sendImage(cc.event.getChannel(), renderedGraph, "relations");
         
-        return true;
+        return false;
     }
     
     private List<User> userList(CommandContainer cc) {

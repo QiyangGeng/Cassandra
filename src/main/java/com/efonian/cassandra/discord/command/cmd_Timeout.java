@@ -21,12 +21,10 @@ public class cmd_Timeout extends Command {
             return false;
         
         // a while true loop could be added here to be more evil, but that is besides the point
-        while(true) {
-            try {
-                currentThread.join();
-            } catch(InterruptedException ignored) { }
-        }
-//        return false;
+        try {
+            currentThread.join();
+        } catch(InterruptedException ignored) {}
+        return false;
     }
     
     @Override

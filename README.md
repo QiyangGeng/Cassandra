@@ -112,7 +112,6 @@ application.
 Finally, here is a non-inclusive list of things I am considering getting done:
 
 ### Short term:
-- Invert return value of execute in Command class
 - Change commands initialized by the manager to have a limited lifetime
 - Upgrade CommandContainer parser
 - Implement DebugManager

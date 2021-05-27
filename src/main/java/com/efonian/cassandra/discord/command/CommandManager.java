@@ -176,12 +176,12 @@ public final class CommandManager {
     }
     
     private void handleCommandFirstExecutionComplete(boolean result, Command cmd, CommandContainer cc, long client) {
-        if (!result) {
-            logger.info(String.format("Completed command %s for (%s)", cmd.getClass().getSimpleName(), cc.event.getAuthor().getName()));
-        } else {
+        if (result) {
             logger.info(String.format("Completed command %s for (%s)", cmd.getClass().getSimpleName(), cc.event.getAuthor().getName()));
             logger.info("Commands left in progress: " + commandsQueue.size());
             commandsQueue.put(client, cmd);
+        } else {
+            logger.info(String.format("Completed command %s for (%s)", cmd.getClass().getSimpleName(), cc.event.getAuthor().getName()));
         }
     }
     

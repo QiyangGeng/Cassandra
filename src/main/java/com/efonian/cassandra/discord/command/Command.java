@@ -57,16 +57,13 @@ public abstract class Command {
     @PreDestroy
     protected void shutdown() {}
     
-    // TODO: invert the return to be true to persist
     /**
      * Abstract execution function of a command
      * Note: due to the way the CommandManager is implemented, commands can just throw an {@code IllegalArgumentException}
      * and its help message will be displayed to the user
      * @param cc    The container with command information
-     * @return      Whether the command has finished execution, return false only if the command is awaiting further
-     *              input from the user. When false is returned, the command will be kept in memory; otherwise, it
-     *              will be left to the garbage collector. The next call to the command will likely be on a different
-     *              thread.
+     * @return      Whether the command is awaiting further user input. Return true to have a reference kept, false
+     *              otherwise.
      */
     abstract boolean execute(CommandContainer cc);
     

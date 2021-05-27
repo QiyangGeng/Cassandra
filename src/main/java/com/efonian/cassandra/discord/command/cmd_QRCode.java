@@ -42,7 +42,7 @@ public class cmd_QRCode extends Command {
             default:
                 throw new IllegalArgumentException();
         }
-        return true;
+        return false;
     }
     
     private void decode(CommandContainer cc) {

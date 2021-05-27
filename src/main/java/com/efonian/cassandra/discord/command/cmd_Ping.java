@@ -21,7 +21,7 @@ public class cmd_Ping extends Command {
             setDescription(":stopwatch: " + (message.getTimeCreated().toInstant().toEpochMilli() - cc.event.getMessage().getTimeCreated().toInstant().toEpochMilli()) + "ms");
             setColor(0xFF40E0D0);
         }}.build()).queue());
-        return true;
+        return false;
     }
     
     @Override
