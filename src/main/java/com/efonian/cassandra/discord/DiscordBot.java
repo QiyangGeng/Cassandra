@@ -68,10 +68,11 @@ public final class DiscordBot {
     
     // Note to self: remember to update when persistent operators are added
     private void createAuxiliaryListeners() {
-        eventListenerManager.registerOperator(ReadyEvent.class, event -> {
-            readyPreparations();
-            logger.info("Discord bot ready");
-        })
+        eventListenerManager
+                .registerOperator(ReadyEvent.class, event -> {
+                    readyPreparations();
+                    logger.info("Discord bot ready");
+                })
                 .registerOperator(DisconnectEvent.class, event -> logger.info("Discord bot disconnected"))
                 .registerOperator(ReconnectedEvent.class, event -> logger.info("Discord bot reconnected"))
                 .registerOperator(ShutdownEvent.class, event -> logger.info("Discord bot shutdown"))
