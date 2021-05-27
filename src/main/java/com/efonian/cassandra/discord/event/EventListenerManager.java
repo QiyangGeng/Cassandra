@@ -48,7 +48,7 @@ public final class EventListenerManager {
         // The maxResponseNumber check removes duplicate events which are sent because... networking.
         if(maxResponseNumber < event.getResponseNumber() && eventListenerRegistry.containsKey(eventType)) {
             List<Predicate<? extends GenericEvent>> registeredListeners = eventListenerRegistry.get(eventType);
-            eventListenerRegistry.get(eventType).removeIf(eventOperator -> ((Predicate<E>) eventOperator).test(eventType.cast(event)));
+            registeredListeners.removeIf(eventOperator -> ((Predicate<E>) eventOperator).test(eventType.cast(event)));
             if(registeredListeners.isEmpty())
                 eventListenerRegistry.remove(eventType);
             maxResponseNumber = event.getResponseNumber();
@@ -89,7 +89,7 @@ public final class EventListenerManager {
     }
     
     /**
-     *
+     * Registers a persistent operator.
      * @param eventType The type of event to listen to
      * @param operator What to do with the event
      */
@@ -101,7 +101,7 @@ public final class EventListenerManager {
     }
     
     /**
-     *
+     * Registers a persistent operator with a lifetime.
      * @param eventType The type of event to listen to
      * @param operator What to do with the event
      * @param lifetime How long to wait for this event to occur
