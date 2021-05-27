@@ -53,7 +53,7 @@ public final class CommandManager {
      * Registers a message listener and direct received messages to {@code handleMessageInput}
      */
     private void registerMessageListener() {
-        eventListenerManager.registerPersistentOperator(MessageReceivedEvent.class, this::handleMessageInput);
+        eventListenerManager.registerOperator(MessageReceivedEvent.class, this::handleMessageInput);
     }
     
     /**

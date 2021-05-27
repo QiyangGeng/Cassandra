@@ -68,18 +68,18 @@ public final class DiscordBot {
     
     // Note to self: remember to update when persistent operators are added
     private void createAuxiliaryListeners() {
-        eventListenerManager.registerPersistentOperator(ReadyEvent.class, event -> {
+        eventListenerManager.registerOperator(ReadyEvent.class, event -> {
             readyPreparations();
             logger.info("Discord bot ready");
         })
-                .registerPersistentOperator(DisconnectEvent.class, event -> logger.info("Discord bot disconnected"))
-                .registerPersistentOperator(ReconnectedEvent.class, event -> logger.info("Discord bot reconnected"))
-                .registerPersistentOperator(ShutdownEvent.class, event -> logger.info("Discord bot shutdown"))
-                .registerPersistentOperator(GuildJoinEvent.class,
+                .registerOperator(DisconnectEvent.class, event -> logger.info("Discord bot disconnected"))
+                .registerOperator(ReconnectedEvent.class, event -> logger.info("Discord bot reconnected"))
+                .registerOperator(ShutdownEvent.class, event -> logger.info("Discord bot shutdown"))
+                .registerOperator(GuildJoinEvent.class,
                         event -> logger.info("Discord bot joined guild: " + event.getGuild().getName()))
-                .registerPersistentOperator(GuildLeaveEvent.class,
+                .registerOperator(GuildLeaveEvent.class,
                         event -> logger.info("Discord bot left guild: " + event.getGuild().getName()))
-                .registerPersistentOperator(SelfUpdateAvatarEvent.class,
+                .registerOperator(SelfUpdateAvatarEvent.class,
                         event -> avatarAverageColor = UtilImage.averageColor(event.getNewAvatarUrl()));
     }
     
@@ -129,7 +129,7 @@ public final class DiscordBot {
     }
     
     public static String getSelfAvatar() {
-        return DiscordBot.getJda().getSelfUser().getAvatarUrl();
+        return DiscordBot.getJda().getSelfUser().getEffectiveAvatarUrl();
     }
     
     public static Color getSelfAvatarAverageColour() {

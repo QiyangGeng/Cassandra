@@ -26,7 +26,7 @@ public class QRCodeAutoDecoder {
     
     @PostConstruct
     public void init() {
-        eventManager.registerPersistentOperator(MessageReceivedEvent.class, event -> {
+        eventManager.registerOperator(MessageReceivedEvent.class, event -> {
             if(event.getAuthor().equals(event.getJDA().getSelfUser()))
                 return;
 

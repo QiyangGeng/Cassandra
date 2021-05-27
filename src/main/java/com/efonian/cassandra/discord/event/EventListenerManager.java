@@ -20,7 +20,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 
 // add miscellaneous "prebuilt" listeners, such as ones which listens to specific channels/guilds
@@ -37,7 +36,8 @@ import java.util.function.Predicate;
 @ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 public final class EventListenerManager {
     private static final ScheduledExecutorService deletionScheduler = Executors.newSingleThreadScheduledExecutor();
-    private final Map<Class<? extends GenericEvent>, List<Predicate<? extends GenericEvent>>> eventListenerRegistry = new ConcurrentHashMap<>();
+    
+    private final Map<Class<? extends GenericEvent>, List<Consumer<? extends GenericEvent>>> eventListenerRegistry = new ConcurrentHashMap<>();
     
     private long maxResponseNumber = -1;
     
@@ -47,8 +47,8 @@ public final class EventListenerManager {
     <E extends GenericEvent> void handleEvent(Class<E> eventType, GenericEvent event) {
         // The maxResponseNumber check removes duplicate events which are sent because... networking.
         if(maxResponseNumber < event.getResponseNumber() && eventListenerRegistry.containsKey(eventType)) {
-            List<Predicate<? extends GenericEvent>> registeredListeners = eventListenerRegistry.get(eventType);
-            registeredListeners.removeIf(eventOperator -> ((Predicate<E>) eventOperator).test(eventType.cast(event)));
+            final List<Consumer<? extends GenericEvent>> registeredListeners = eventListenerRegistry.get(eventType);
+            registeredListeners.forEach(eventOperator -> ((Consumer<E>) eventOperator).accept(eventType.cast(event)));
             if(registeredListeners.isEmpty())
                 eventListenerRegistry.remove(eventType);
             maxResponseNumber = event.getResponseNumber();
@@ -56,12 +56,13 @@ public final class EventListenerManager {
     }
     
     /**
-     * Used to register an eventListener.
+     * Used to register a persistent eventListener.
      * @param eventType The type of event to listen to
      * @param operator What to do with the event
      * @return This manager to enable chained calls
      */
-    public <E extends GenericEvent> EventListenerManager registerOperator(@Nonnull Class<E> eventType, @Nonnull Predicate<E> operator) {
+    public <E extends GenericEvent> EventListenerManager registerOperator(@Nonnull Class<E> eventType,
+                                                                          @Nonnull Consumer<E> operator) {
         if(eventListenerRegistry.containsKey(eventType))
             eventListenerRegistry.get(eventType).add(operator);
         else
@@ -70,14 +71,16 @@ public final class EventListenerManager {
     }
     
     /**
-     * Used to register an eventListener with a lifetime.
+     * Used to register a persistent eventListener with a lifetime.
      * @param eventType The type of event to listen to
      * @param operator What to do with the event
      * @param lifetime How long to wait for this event to occur
      * @param unit The time unit for the given lifetime
      * @return This manager to enable chained calls
      */
-    public <E extends GenericEvent> EventListenerManager registerOperator(@Nonnull Class<E> eventType, @Nonnull Predicate<E> operator, long lifetime, TimeUnit unit) {
+    public <E extends GenericEvent> EventListenerManager registerOperator(@Nonnull Class<E> eventType,
+                                                                          @Nonnull Consumer<E> operator,
+                                                                          long lifetime, TimeUnit unit) {
         if(lifetime > 0) {
             registerOperator(eventType, operator);
             deletionScheduler.schedule(() -> {
@@ -89,37 +92,18 @@ public final class EventListenerManager {
     }
     
     /**
-     * Registers a persistent operator.
-     * @param eventType The type of event to listen to
-     * @param operator What to do with the event
+     * Removes an operator.
+     * @param operator  The reference to the registered operator
+     * @return This manager to enable chained calls
      */
-    public <E extends GenericEvent> EventListenerManager registerPersistentOperator(@Nonnull Class<E> eventType,
-                                                                                    @Nonnull Consumer<E> operator) {
-        return registerOperator(eventType, event -> {
-            operator.accept(event);
-            return false;
-        });
-    }
-    
-    /**
-     * Registers a persistent operator with a lifetime.
-     * @param eventType The type of event to listen to
-     * @param operator What to do with the event
-     * @param lifetime How long to wait for this event to occur
-     * @param unit The time unit for the given lifetime
-     */
-    public <E extends GenericEvent> EventListenerManager registerPersistentOperator(@Nonnull Class<E> eventType,
-                                                                                    @Nonnull Consumer<E> operator,
-                                                                                    long lifetime, TimeUnit unit) {
-        return registerOperator(eventType, event -> {
-            operator.accept(event);
-            return false;
-        }, lifetime, unit);
+    public <E extends GenericEvent> EventListenerManager removeOperator(@Nonnull Consumer<E> operator) {
+        eventListenerRegistry.values().forEach(list -> list.remove(operator));
+        return this;
     }
     
     public int countRegisteredOperators() {
         int sum = 0;
-        for(List<Predicate<? extends GenericEvent>> list: eventListenerRegistry.values())
+        for(List<Consumer<? extends GenericEvent>> list: eventListenerRegistry.values())
             sum += list.size();
         return sum;
     }
