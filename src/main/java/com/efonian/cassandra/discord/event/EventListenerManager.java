@@ -94,11 +94,10 @@ public final class EventListenerManager {
      * @param operator What to do with the event
      */
     public <E extends GenericEvent> EventListenerManager registerOperator(@Nonnull Class<E> eventType, @Nonnull Consumer<E> operator) {
-        registerOperator(eventType, event -> {
+        return registerOperator(eventType, event -> {
             operator.accept(event);
             return false;
         });
-        return this;
     }
     
     /**
@@ -109,11 +108,10 @@ public final class EventListenerManager {
      * @param unit The time unit for the given lifetime
      */
     public <E extends GenericEvent> EventListenerManager registerOperator(@Nonnull Class<E> eventType, @Nonnull Consumer<E> operator, long lifetime, TimeUnit unit) {
-        registerOperator(eventType, event -> {
+        return registerOperator(eventType, event -> {
             operator.accept(event);
             return false;
         }, lifetime, unit);
-        return this;
     }
     
     public int countRegisteredOperators() {
