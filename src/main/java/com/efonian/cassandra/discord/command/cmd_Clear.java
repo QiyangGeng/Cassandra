@@ -22,7 +22,8 @@ public class cmd_Clear extends Command {
     
     /**
      * Deletes messages in the channel the command was issued. The number of numbers can be passed in as a parameter,
-     * the default value is stored in <c>CAPACITY</c>.
+     * the default value is stored in <c>CAPACITY</c>. Due to the asynchronous nature of the implementation, the
+     * messages may not be deleted in any particular order.
      * @param cc    The container with command information
      * @return      Whether the command has finished execution
      */
