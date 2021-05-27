@@ -32,7 +32,7 @@ public abstract class Command {
     
     /**
      * Sets up each command and register it with the Command manager, an alternative to autowiring such as done in the
-     * {@code CommandAccessManager}
+     * {@code CommandAccessManager}. In the case of commands, this process is decentralized for JIT.
      */
     @PostConstruct
     private void init() {
