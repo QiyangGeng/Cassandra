@@ -47,7 +47,6 @@ public final class DiscordBot {
     private EventListener eventListener;
     private EventListenerManager eventListenerManager;
     
-    private static boolean ready = false;
     private static JDA jda;
     
     @PostConstruct
@@ -69,26 +68,19 @@ public final class DiscordBot {
     
     // Note to self: remember to update when persistent operators are added
     private void createAuxiliaryListeners() {
-        eventListenerManager.registerOperator(ReadyEvent.class, event -> {
+        eventListenerManager.registerPersistentOperator(ReadyEvent.class, event -> {
             readyPreparations();
             logger.info("Discord bot ready");
-            ready = true;
-        }).registerOperator(DisconnectEvent.class, event -> {
-            logger.info("Discord bot disconnected");
-            ready = false;
-        }).registerOperator(ReconnectedEvent.class, event -> {
-            logger.info("Discord bot reconnected");
-            ready = true;
-        }).registerOperator(ShutdownEvent.class, event -> {
-            logger.info("Discord bot shutdown");
-            ready = false;
-        }).registerOperator(GuildJoinEvent.class, event -> {
-            logger.info("Discord bot joined guild: " + event.getGuild().getName());
-        }).registerOperator(GuildLeaveEvent.class, event -> {
-            logger.info("Discord bot left guild: " + event.getGuild().getName());
-        }).registerOperator(SelfUpdateAvatarEvent.class, event -> {
-            avatarAverageColor = UtilImage.averageColor(event.getNewAvatarUrl());
-        });
+        })
+                .registerPersistentOperator(DisconnectEvent.class, event -> logger.info("Discord bot disconnected"))
+                .registerPersistentOperator(ReconnectedEvent.class, event -> logger.info("Discord bot reconnected"))
+                .registerPersistentOperator(ShutdownEvent.class, event -> logger.info("Discord bot shutdown"))
+                .registerPersistentOperator(GuildJoinEvent.class,
+                        event -> logger.info("Discord bot joined guild: " + event.getGuild().getName()))
+                .registerPersistentOperator(GuildLeaveEvent.class,
+                        event -> logger.info("Discord bot left guild: " + event.getGuild().getName()))
+                .registerPersistentOperator(SelfUpdateAvatarEvent.class,
+                        event -> avatarAverageColor = UtilImage.averageColor(event.getNewAvatarUrl()));
     }
     
     private void readyPreparations() {
@@ -142,10 +134,6 @@ public final class DiscordBot {
     
     public static Color getSelfAvatarAverageColour() {
         return DiscordBot.avatarAverageColor;
-    }
-    
-    public static boolean isReady() {
-        return DiscordBot.ready;
     }
     
     public long getOwnerId() { return ownerId; }
