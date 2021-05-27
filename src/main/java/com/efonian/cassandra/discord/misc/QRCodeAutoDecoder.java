@@ -28,11 +28,11 @@ public class QRCodeAutoDecoder {
     public void init() {
         eventManager.registerOperator(MessageReceivedEvent.class, event -> {
             if(event.getAuthor().equals(event.getJDA().getSelfUser()))
-                return false;
-            
+                return;
+
             List<Message.Attachment> attachedImages = event.getMessage().getAttachments()
                     .stream().filter(Message.Attachment::isImage).collect(Collectors.toList());
-            
+
             for(Message.Attachment att : attachedImages) {
                 String textOutput;
                 try {
@@ -47,8 +47,6 @@ public class QRCodeAutoDecoder {
                     }}.build()).queue();
                 } catch(NotFoundException | IOException ignored) {}
             }
-            
-            return false;
         });
     }
     
