@@ -5,13 +5,13 @@ and communicates with Discord using the popular event-driven API [JDA](https://g
 This is a toy project, and there is no plan for the bot to become publicly available. However, the code is all here...
 
 ## Contents
-- [Summary](#Summary)
-- [Overview](#Overview)
-    - [DiscordBot Class](#DiscordBot Class)
-    - [Event Handling](#Event Handling)
-    - [Command](#Command)
-    - [Console](#Console)
-- [TODOs](#TODOs)
+- [Summary](#summary)
+- [Overview](#overview)
+    - [DiscordBot Class](#discordBot-class)
+    - [Event Handling](#event-handling)
+    - [Command](#command)
+    - [Console](#console)
+- [TODOs](#todos)
 
 ## Summary
 The purposes of this project is applying OO concepts, learning relevant design patterns, and exploring various interesting
