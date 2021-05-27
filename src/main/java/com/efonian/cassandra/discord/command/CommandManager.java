@@ -206,9 +206,12 @@ public final class CommandManager {
     }
     
     private Void handleCommandException(Throwable throwable, Command cmd, CommandContainer cc, long client) {
-        if(throwable.getClass().equals(RuntimeException.class))
-            throwable = throwable.getCause();
+        if(throwable.getClass().equals(RuntimeException.class)) {
+            if(throwable.getCause() != null)
+                throwable = throwable.getCause();
+        }
         
+        // Special cases
         // see comment in the startTask method
         if(throwable instanceof TimeoutException) {
             handleTimeout(cmd, cc, client);
@@ -222,7 +225,8 @@ public final class CommandManager {
             commandsQueue.remove(client);
             return null;
         }
-    
+        
+        // General exceptions
         cc.event.getChannel().sendMessage(String.format("%s Unable to complete task", cc.event.getAuthor().getAsMention())).queue();
         logger.info(String.format("Failed completing command %s for (%s) with exception %s",
                 cmd.getClass().getSimpleName(),
