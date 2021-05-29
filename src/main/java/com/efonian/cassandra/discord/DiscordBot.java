@@ -126,7 +126,7 @@ public final class DiscordBot {
     }
     
     public static String getSelfName() {
-        return DiscordBot.getJda().getSelfUser().getName();
+        return DiscordBot.getSelfUser().getName();
     }
     
     public static String getSelfAvatar() {
