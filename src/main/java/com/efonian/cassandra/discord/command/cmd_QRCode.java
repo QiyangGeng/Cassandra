@@ -67,11 +67,11 @@ public class cmd_QRCode extends Command {
     
                     try {
                         decodeAndSendResult(cc, UtilImage.readImage(UtilWeb.getURL(attached.get(0).getUrl())));
-                    } catch(NotFoundException e) { continue; }
-                    return;
+                        return;
+                    } catch(NotFoundException ignored) {}
                 }
+                cc.event.getChannel().sendMessage("Could not find valid image").queue();
             });
-            cc.event.getChannel().sendMessage("Could not find valid image").queue();
         }
     }
     
