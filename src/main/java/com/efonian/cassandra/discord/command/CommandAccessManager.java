@@ -11,7 +11,6 @@ import com.google.gson.reflect.TypeToken;
 import io.vavr.control.Either;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -134,32 +133,29 @@ public final class CommandAccessManager {
         userAccessLevelRecords = gson.fromJson(inFile, calType);
     }
     
-    @Autowired
-    private void populateCommandAccessLevels(List<? extends Command> commands) {
-        for(Command cmd: commands) {
-            Class<? extends Command> cla = cmd.getClass();
-            
-            if(cla.isAnnotationPresent(Disabled.class))
-                continue;
+    void registerCommand(Command cmd) {
+        Class<? extends Command> cla = cmd.getClass();
     
-            boolean botFriendly = cla.isAnnotationPresent(BotFriendly.class);
-            boolean guildOnly = cla.isAnnotationPresent(GuildOnly.class);
-            
-            if(!cla.isAnnotationPresent(DeclareCommandAccessLevel.class)) {
-                logger.warn(String.format("Command %s did not declare command access level", cla.getName()));
-                commandAccessLevels.put(cmd, new CommandAccessLevelContainer(CommandAccessLevel.NULL, botFriendly, guildOnly));
-                continue;
-            }
-            
-            DeclareCommandAccessLevel ann = cla.getAnnotation(DeclareCommandAccessLevel.class);
-            if(ann.accessLevel() != CommandAccessLevel.NULL) {
-                commandAccessLevels.put(cmd, new CommandAccessLevelContainer(ann.accessLevel(), botFriendly, guildOnly));
-                continue;
-            }
-            
-            commandAccessLevels.put(cmd,
-                    new CommandAccessLevelContainer(ann.guildAccessLevel(), ann.privateAccessLevel(), botFriendly, guildOnly));
+        if(cla.isAnnotationPresent(Disabled.class))
+            return;
+    
+        boolean botFriendly = cla.isAnnotationPresent(BotFriendly.class);
+        boolean guildOnly = cla.isAnnotationPresent(GuildOnly.class);
+    
+        if(!cla.isAnnotationPresent(DeclareCommandAccessLevel.class)) {
+            logger.warn(String.format("Command %s did not declare command access level", cla.getName()));
+            commandAccessLevels.put(cmd, new CommandAccessLevelContainer(CommandAccessLevel.NULL, botFriendly, guildOnly));
+            return;
         }
+    
+        DeclareCommandAccessLevel ann = cla.getAnnotation(DeclareCommandAccessLevel.class);
+        if(ann.accessLevel() != CommandAccessLevel.NULL) {
+            commandAccessLevels.put(cmd, new CommandAccessLevelContainer(ann.accessLevel(), botFriendly, guildOnly));
+            return;
+        }
+    
+        commandAccessLevels.put(cmd,
+                new CommandAccessLevelContainer(ann.guildAccessLevel(), ann.privateAccessLevel(), botFriendly, guildOnly));
     }
     
     // TODO: the boolean flags can be abstrated to a more general set of predicates such that only one place need to change

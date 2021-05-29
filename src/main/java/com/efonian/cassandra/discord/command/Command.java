@@ -28,7 +28,8 @@ import java.util.List;
 public abstract class Command {
     private static final Logger logger = LoggerFactory.getLogger(Command.class);
     
-    private CommandManager manager;
+    private CommandManager cmdManager;
+    private CommandAccessManager cmdAccessManager;
     
     /**
      * Sets up each command and register it with the Command manager, an alternative to autowiring such as done in the
@@ -39,7 +40,8 @@ public abstract class Command {
         if(this.getClass().isAnnotationPresent(Disabled.class))     return;
         
         setup();
-        manager.registerCommand(invokes(), this);
+        cmdManager.registerCommand(invokes(), this);
+        cmdAccessManager.registerCommand(this);
     }
     
     /**
@@ -153,6 +155,11 @@ public abstract class Command {
     
     @Autowired
     private void setCommandManager(CommandManager manager) {
-        this.manager = manager;
+        this.cmdManager = manager;
+    }
+    
+    @Autowired
+    private void setCmdAccessManager(CommandAccessManager manager) {
+        this.cmdAccessManager = manager;
     }
 }
