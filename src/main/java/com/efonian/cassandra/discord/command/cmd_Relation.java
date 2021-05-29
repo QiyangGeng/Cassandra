@@ -35,6 +35,7 @@ public class cmd_Relation extends Command {
     }
     
     private List<User> userList(CommandContainer cc) {
+        // Here, the user collection is a list, as index is needed for the Vertex Factory in graphUsers method
         List<User> list = new ArrayList<>();
         Lists.newArrayList(cc.args).forEach(str -> {
             try {
@@ -65,10 +66,15 @@ public class cmd_Relation extends Command {
                 return graph;
 
             case 1:
+                // At this point, the users list has one user. Our goal is to populate the list with at least two
+                // users, where we have the author and the bot as fallback in that order. Thus:
+                // if the list is a user that is not the author, we add the author to the list
+                // if the list is a user that is the author, we add the bot to the list
                 if(users.contains(cc.event.getAuthor()))
-                    throw new IllegalArgumentException();
+                    users.add(getSelfUser());
+                else
+                    users.add(cc.event.getAuthor());
                 
-                users.add(cc.event.getAuthor());
                 break;
         }
     
