@@ -14,14 +14,12 @@ public final class UtilQRCode {
         LuminanceSource source = new BufferedImageLuminanceSource(bufferedImage);
         BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
     
-        Result result = new MultiFormatReader().decode(bitmap);
-        return result.getText();
+        return new MultiFormatReader().decode(bitmap).getText();
     }
     
     public static BufferedImage generateQRCodeImage(String text) throws WriterException {
         QRCodeWriter barcodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix =
-                barcodeWriter.encode(text, BarcodeFormat.QR_CODE, 200, 200);
+        BitMatrix bitMatrix = barcodeWriter.encode(text, BarcodeFormat.QR_CODE, 200, 200);
     
         return MatrixToImageWriter.toBufferedImage(bitMatrix);
     }
