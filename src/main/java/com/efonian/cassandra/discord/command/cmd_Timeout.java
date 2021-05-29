@@ -20,7 +20,7 @@ public class cmd_Timeout extends Command {
         if(!currentThread.isDaemon())
             return false;
         
-        // a while true loop could be added here to be more evil, but that is besides the point
+        // a while true loop could be added here to be more evil, but that is besides the point in this case
         try {
             currentThread.join();
         } catch(InterruptedException ignored) {}
