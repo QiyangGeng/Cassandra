@@ -9,11 +9,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -31,10 +31,11 @@ public final class CommandManager {
     
     @Value("${cassandra.discord.command.default.lifetime}")
     private long defaultCommandLifetime;
-    private TimeUnit defaultCommandTimeUnit = TimeUnit.SECONDS;
+    private final TimeUnit defaultCommandTimeUnit = TimeUnit.SECONDS;
     
     private Map<List<String>, Command> registeredCommands = new ConcurrentHashMap<>();
     private EventListenerManager eventListenerManager;
+    private ApplicationContext appContext;
     
     private ExecutorService executors = Executors.newFixedThreadPool(4, new DaemonThreadFactory());
     private Map<Long, Command> commandsQueue = new ConcurrentHashMap<>();
@@ -157,22 +158,17 @@ public final class CommandManager {
      * @param cc    The details of the command parameters and such in a packaged container
      */
     private void startTask(Command cmd, CommandContainer cc) {
-        try {
-            long client = cc.event.getAuthor().getIdLong();
-            Command cmdCopy = cmd.getClass().getConstructor().newInstance();
-            logger.info("Accepted command of class " + cmd.getClass().getSimpleName());
-            
-            CompletableFuture
-                    .supplyAsync(() -> cmdCopy.execute(cc), executors)
-                    // commented out since the default value for the below method is precomputed, uncomment if the API ever gives a lazy option
+        long client = cc.event.getAuthor().getIdLong();
+        Command cmdCopy = appContext.getBean(cmd.getClass());
+        logger.info("Accepted command of class " + cmd.getClass().getSimpleName());
+    
+        CompletableFuture
+                .supplyAsync(() -> cmdCopy.execute(cc), executors)
+                // commented out since the default value for the below method is precomputed, uncomment if the API ever gives a lazy option
 //                    .completeOnTimeout(handleTimeout(cmdCopy, cc, client), defaultCommandLifetime, defaultCommandTimeUnit)
-                    .orTimeout(defaultCommandLifetime, defaultCommandTimeUnit)
-                    .thenAcceptAsync(result -> handleCommandFirstExecutionComplete(result, cmdCopy, cc, client))
-                    .exceptionallyAsync(throwable -> handleCommandException(throwable.getCause(), cmdCopy, cc, client));
-        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-            logger.warn("An exception occurred when creating a new instance of " + cmd.getClass().getName());
-            e.printStackTrace();
-        }
+                .orTimeout(defaultCommandLifetime, defaultCommandTimeUnit)
+                .thenAcceptAsync(result -> handleCommandFirstExecutionComplete(result, cmdCopy, cc, client))
+                .exceptionallyAsync(throwable -> handleCommandException(throwable.getCause(), cmdCopy, cc, client));
     }
     
     private void handleCommandFirstExecutionComplete(boolean result, Command cmd, CommandContainer cc, long client) {
@@ -265,5 +261,10 @@ public final class CommandManager {
     @Autowired
     private void setEventListenerManager(EventListenerManager eventListenerManager) {
         this.eventListenerManager = eventListenerManager;
+    }
+    
+    @Autowired
+    private void setAppContext(ApplicationContext appContext) {
+        this.appContext = appContext;
     }
 }
