@@ -49,8 +49,6 @@ public final class EventListenerManager {
         if(maxResponseNumber < event.getResponseNumber() && eventListenerRegistry.containsKey(eventType)) {
             final List<Consumer<? extends GenericEvent>> registeredListeners = eventListenerRegistry.get(eventType);
             registeredListeners.forEach(eventOperator -> ((Consumer<E>) eventOperator).accept(eventType.cast(event)));
-            if(registeredListeners.isEmpty())
-                eventListenerRegistry.remove(eventType);
             maxResponseNumber = event.getResponseNumber();
         }
     }
