@@ -18,9 +18,11 @@ public class cmd_Help extends Command {
     boolean execute(CommandContainer cc) {
         CommandAccessLevel userAL = CommandAccessManager.findUserAccessLevel(cc.event.getAuthor().getIdLong());
         List<Command> availableCommands = CommandAccessManager.getAvailableCommands(cc);
+        
+        // We sort the commands alphabetically
         availableCommands.sort((cmd1, cmd2) -> {
-            String name1 = cmd1.getClass().getSimpleName().substring(4);
-            String name2 = cmd2.getClass().getSimpleName().substring(4);
+            String name1 = cmd1.getClass().getSimpleName();
+            String name2 = cmd2.getClass().getSimpleName();
             return name1.compareTo(name2);
         });
         
