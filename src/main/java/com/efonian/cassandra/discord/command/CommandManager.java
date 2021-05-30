@@ -33,12 +33,12 @@ public final class CommandManager {
     private long defaultCommandLifetime;
     private final TimeUnit defaultCommandTimeUnit = TimeUnit.SECONDS;
     
-    private Map<List<String>, Command> registeredCommands = new ConcurrentHashMap<>();
+    private final Map<List<String>, Command> registeredCommands = new ConcurrentHashMap<>();
+    private final ExecutorService executors = Executors.newFixedThreadPool(4, new DaemonThreadFactory());
+    private final Map<Long, Command> commandsQueue = new ConcurrentHashMap<>();
+    
     private EventListenerManager eventListenerManager;
     private ApplicationContext appContext;
-    
-    private ExecutorService executors = Executors.newFixedThreadPool(4, new DaemonThreadFactory());
-    private Map<Long, Command> commandsQueue = new ConcurrentHashMap<>();
     
     
     /**

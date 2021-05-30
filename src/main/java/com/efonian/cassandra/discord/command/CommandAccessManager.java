@@ -61,22 +61,31 @@ public final class CommandAccessManager {
         return CommandAccessManager.hasPermission(cc, command).getOrElseGet((msg) -> false);
     }
     
-    static List<Command> getAvailableCommands(CommandContainer cc) {
-        return commandAccessLevels.keySet().stream().filter(cmd ->
-                findAndCompareAccessLevel(cc, cmd)).collect(Collectors.toList());
-    }
-    
     static boolean canRequestMulti(long userId) {
         return MULTI_COMMAND_ALLOWED.compareTo(findUserAccessLevel(userId)) <= 0;
     }
     
-    private static boolean findAndCompareAccessLevel(CommandContainer cc, Command command) {
-        CommandAccessLevelContainer calc = commandAccessLevels.get(command);
-        return findAndCompareAccessLevel(cc, command, calc);
+    /**
+     * Given the information from the command container, determines to which command the caller has access. One caveat
+     * is that commands which dynamically assign access level based on the argument will by default be rejected for
+     * callers with access levels less than FULL, per the order of access levels in the <@c>CommandAccessLevel</@c>
+     * enum.
+     *
+     * For now, this method is tailor made for the cmd_Help command.
+     */
+    static List<Command> getAvailableCommands(CommandContainer cc) {
+        return commandAccessLevels.keySet().stream()
+                .filter(cmd -> findAndCompareAccessLevelIgnoreDynamic(cc, cmd, commandAccessLevels.get(cmd)))
+                .collect(Collectors.toList());
+    }
+    
+    private static boolean findAndCompareAccessLevelIgnoreDynamic(CommandContainer cc, Command command, CommandAccessLevelContainer calc) {
+        return calc.getAccessLevel(cc.event.isFromGuild())
+                .compareTo(findUserAccessLevel(cc.event.getAuthor().getIdLong())) <= 0;
     }
     
     private static boolean findAndCompareAccessLevel(CommandContainer cc, Command command, CommandAccessLevelContainer calc) {
-        CommandAccessLevel commandAL = cc.event.isFromGuild()? calc.guildAccessLevel : calc.privateAccessLevel;
+        CommandAccessLevel commandAL = calc.getAccessLevel(cc.event.isFromGuild());
         
         // handle dynamic access level
         if(commandAL.equals(CommandAccessLevel.DYNAMIC))
@@ -182,6 +191,10 @@ public final class CommandAccessManager {
                                             boolean botFriendly,
                                             boolean guildOnly) {
             this(accessLevel, accessLevel, botFriendly, guildOnly);
+        }
+        
+        private CommandAccessLevel getAccessLevel(boolean isFromGuild) {
+            return isFromGuild? this.guildAccessLevel : this.privateAccessLevel;
         }
     
         @Override

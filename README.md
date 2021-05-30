@@ -122,10 +122,11 @@ Finally, here is a non-inclusive list of things I am considering getting done:
 - Implement the empty classes
 
 ### Medium term:
-- Implement staged commands
+- ~~Implement staged commands~~ Implement services (see change log)
 - Implement annotation-predicate hashMaps for flags in command access levels
 - Add the RBAC system
 - Implement console
+- Implement UtilMessage for Discord Bot
 - Implement more fully UtilFile
 
 ### Long term (mostly speculative):
@@ -133,3 +134,21 @@ Finally, here is a non-inclusive list of things I am considering getting done:
 - Compute shaders for computation of stuff
 - JIT stuff through command
 - Move to GraalVM
+
+## Change Log
+This section will include major program decision changes (when I feel like it)
+
+### Moving on from Staged Commands to Services (2021/05/29)
+
+As per what I have never mentioned before, *Cassandra* is the fifth iteration of my Discord Bot program 
+(V 0.5, if you will). Previous versions included implementations of "staged commands", which are similar to the basic
+commands, except they expect multiple inputs over time. This was fine with previous implementations of commands.
+
+However, as *Cassandra* slowly became the first iteration where I actually planned for the program components, I came to
+the realization that there is a more fundamental difference between simple commands and staged ones, in that the latter
+is much, much more complex. Further, using Spring, it is quite convenient to scope the former as singletons, and the 
+latter prototypes. (Also, the command package is getting quite large.) As such, I will be separating out "staged commands"
+as services rather than commands.
+
+This does not mean they will have nothing to do with commands: it is likely that they will be initiated by commands, but
+we will see.
