@@ -75,11 +75,11 @@ public final class CommandAccessManager {
      */
     static List<Command> getAvailableCommands(CommandContainer cc) {
         return commandAccessLevels.keySet().stream()
-                .filter(cmd -> findAndCompareAccessLevelIgnoreDynamic(cc, cmd, commandAccessLevels.get(cmd)))
+                .filter(cmd -> findAndCompareAccessLevelIgnoreDynamic(cc, commandAccessLevels.get(cmd)))
                 .collect(Collectors.toList());
     }
     
-    private static boolean findAndCompareAccessLevelIgnoreDynamic(CommandContainer cc, Command command, CommandAccessLevelContainer calc) {
+    private static boolean findAndCompareAccessLevelIgnoreDynamic(CommandContainer cc, CommandAccessLevelContainer calc) {
         return calc.getAccessLevel(cc.event.isFromGuild())
                 .compareTo(findUserAccessLevel(cc.event.getAuthor().getIdLong())) <= 0;
     }
