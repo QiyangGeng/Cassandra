@@ -16,9 +16,11 @@ import java.util.List;
 public class cmd_Ping extends Command {
     @Override
     boolean execute(CommandContainer cc) {
-        cc.event.getChannel().sendMessage("_ _").queue(message -> cc.event.getChannel().editMessageById(message.getIdLong(), new EmbedBuilder() {{
+        cc.event.getChannel().sendMessage("_ _").queue(message ->
+                cc.event.getChannel().editMessageById(message.getIdLong(), new EmbedBuilder() {{
             setTitle("Pong!");
-            setDescription(":stopwatch: " + (message.getTimeCreated().toInstant().toEpochMilli() - cc.event.getMessage().getTimeCreated().toInstant().toEpochMilli()) + "ms");
+            setDescription(":stopwatch: " + (message.getTimeCreated().toInstant().toEpochMilli()
+                    - cc.event.getMessage().getTimeCreated().toInstant().toEpochMilli()) + "ms");
             setColor(0xFF40E0D0);
         }}.build()).queue());
         return false;
