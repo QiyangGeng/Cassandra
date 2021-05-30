@@ -69,13 +69,14 @@ public final class DiscordBot {
     // Note to self: remember to update when persistent operators are added
     private void createAuxiliaryListeners() {
         eventListenerManager
-                .registerOperator(ReadyEvent.class, event -> {
-                    readyPreparations();
-                    logger.info("Discord bot ready");
-                })
-                .registerOperator(DisconnectEvent.class, event -> logger.info("Discord bot disconnected"))
-                .registerOperator(ReconnectedEvent.class, event -> logger.info("Discord bot reconnected"))
-                .registerOperator(ShutdownEvent.class, event -> logger.info("Discord bot shutdown"))
+                .registerOperator(ReadyEvent.class,
+                        event -> readyPreparations())
+                .registerOperator(DisconnectEvent.class,
+                        event -> logger.info("Discord bot disconnected"))
+                .registerOperator(ReconnectedEvent.class,
+                        event -> logger.info("Discord bot reconnected"))
+                .registerOperator(ShutdownEvent.class,
+                        event -> logger.info("Discord bot shutdown"))
                 .registerOperator(GuildJoinEvent.class,
                         event -> logger.info("Discord bot joined guild: " + event.getGuild().getName()))
                 .registerOperator(GuildLeaveEvent.class,
@@ -89,6 +90,8 @@ public final class DiscordBot {
             avatarAverageColor = UtilImage.averageColor(new URL(getSelfAvatar()));
         } catch(MalformedURLException e) {
             logger.warn("Got bad url from JDA");
+        } finally {
+            logger.info("Discord bot ready");
         }
     }
     
