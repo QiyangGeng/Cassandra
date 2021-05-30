@@ -12,6 +12,7 @@ This is a toy project, and there is no plan for the bot to become publicly avail
     - [Command](#command)
     - [Console](#console)
 - [TODOs](#todos)
+- [Change Log](#change-log)
 
 ## Summary
 The purposes of this project is applying OO concepts, learning relevant design patterns, and exploring various interesting
