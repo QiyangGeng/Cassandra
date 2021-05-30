@@ -30,9 +30,8 @@ public class cmd_Help extends Command {
             setTitle("Help Message");
             setThumbnail(DiscordBot.getSelfAvatar());
             setDescription("Your access level: " + StringUtils.capitalize(userAL.name().toLowerCase()));
-            for(Command cmd: availableCommands) {
+            for(Command cmd: availableCommands)
                 addField(cmd.getClass().getSimpleName().substring(4), cmd.description(), false);
-            }
             setAuthor(DiscordBot.getSelfName());
             setTimestamp(Instant.now());
         }}.build()).queue();
