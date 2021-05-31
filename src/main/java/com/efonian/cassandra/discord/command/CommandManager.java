@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -38,7 +37,6 @@ public final class CommandManager {
     private final Map<Long, Command> commandsQueue = new ConcurrentHashMap<>();
     
     private EventListenerManager eventListenerManager;
-    private ApplicationContext appContext;
     
     
     /**
@@ -159,16 +157,15 @@ public final class CommandManager {
      */
     private void startTask(Command cmd, CommandContainer cc) {
         long client = cc.event.getAuthor().getIdLong();
-        Command cmdCopy = appContext.getBean(cmd.getClass());
         logger.info("Accepted command of class " + cmd.getClass().getSimpleName());
     
         CompletableFuture
-                .supplyAsync(() -> cmdCopy.execute(cc), executors)
+                .supplyAsync(() -> cmd.execute(cc), executors)
                 // commented out since the default value for the below method is precomputed, uncomment if the API ever gives a lazy option
 //                    .completeOnTimeout(handleTimeout(cmdCopy, cc, client), defaultCommandLifetime, defaultCommandTimeUnit)
                 .orTimeout(defaultCommandLifetime, defaultCommandTimeUnit)
-                .thenAcceptAsync(result -> handleCommandFirstExecutionComplete(result, cmdCopy, cc, client))
-                .exceptionallyAsync(throwable -> handleCommandException(throwable.getCause(), cmdCopy, cc, client));
+                .thenAcceptAsync(result -> handleCommandFirstExecutionComplete(result, cmd, cc, client))
+                .exceptionallyAsync(throwable -> handleCommandException(throwable.getCause(), cmd, cc, client));
     }
     
     private void handleCommandFirstExecutionComplete(boolean result, Command cmd, CommandContainer cc, long client) {
@@ -180,17 +177,6 @@ public final class CommandManager {
             logger.info(String.format("Completed command %s for (%s)", cmd.getClass().getSimpleName(), cc.event.getAuthor().getName()));
         }
     }
-    
-    // see comment in the startTask method
-//    private boolean handleTimeout(Command cmd, CommandContainer cc, long client) {
-//        logger.info(String.format("Timed out completing command %s for (%s)",
-//                cmd.getClass().getSimpleName(),
-//                cc.event.getAuthor().getName()
-//        ));
-//        cc.event.getChannel().sendMessage(String.format("%s Timed out on task", cc.event.getAuthor().getAsMention())).queue();
-//        commandsQueue.remove(client);
-//        return true;
-//    }
     
     private void handleTimeout(Command cmd, CommandContainer cc, long client) {
         logger.info(String.format("Timed out completing command %s for (%s)",
@@ -261,10 +247,5 @@ public final class CommandManager {
     @Autowired
     private void setEventListenerManager(EventListenerManager eventListenerManager) {
         this.eventListenerManager = eventListenerManager;
-    }
-    
-    @Autowired
-    private void setAppContext(ApplicationContext appContext) {
-        this.appContext = appContext;
     }
 }
