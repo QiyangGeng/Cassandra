@@ -1,4 +1,4 @@
-package com.efonian.cassandra.discord.command;
+package com.efonian.cassandra.discord.commands;
 
 import com.efonian.cassandra.discord.event.EventListenerManager;
 import com.efonian.cassandra.misc.DaemonThreadFactory;

@@ -1,6 +1,6 @@
-package com.efonian.cassandra.discord.command;
+package com.efonian.cassandra.discord.commands;
 
-import com.efonian.cassandra.discord.command.annotation.DeclareCommandAccessLevel;
+import com.efonian.cassandra.discord.commands.annotation.DeclareCommandAccessLevel;
 import com.efonian.cassandra.util.UtilImage;
 import com.efonian.cassandra.util.UtilQRCode;
 import com.efonian.cassandra.util.UtilWeb;

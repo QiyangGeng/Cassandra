@@ -1,6 +1,6 @@
-package com.efonian.cassandra.discord.command;
+package com.efonian.cassandra.discord.commands;
 
-import com.efonian.cassandra.discord.command.annotation.DeclareCommandAccessLevel;
+import com.efonian.cassandra.discord.commands.annotation.DeclareCommandAccessLevel;
 import net.dv8tion.jda.api.EmbedBuilder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;

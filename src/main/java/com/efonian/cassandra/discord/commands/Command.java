@@ -1,7 +1,7 @@
-package com.efonian.cassandra.discord.command;
+package com.efonian.cassandra.discord.commands;
 
 import com.efonian.cassandra.discord.DiscordBot;
-import com.efonian.cassandra.discord.command.annotation.Disabled;
+import com.efonian.cassandra.discord.commands.annotation.Disabled;
 import com.efonian.cassandra.util.UtilImage;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;

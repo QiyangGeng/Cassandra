@@ -1,4 +1,4 @@
-package com.efonian.cassandra.discord.command;
+package com.efonian.cassandra.discord.commands;
 
 /**
  * A simple enum for levels of access to commands

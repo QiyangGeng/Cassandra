@@ -1,9 +1,9 @@
-package com.efonian.cassandra.discord.command;
+package com.efonian.cassandra.discord.commands;
 
-import com.efonian.cassandra.discord.command.annotation.BotFriendly;
-import com.efonian.cassandra.discord.command.annotation.DeclareCommandAccessLevel;
-import com.efonian.cassandra.discord.command.annotation.Disabled;
-import com.efonian.cassandra.discord.command.annotation.GuildOnly;
+import com.efonian.cassandra.discord.commands.annotation.BotFriendly;
+import com.efonian.cassandra.discord.commands.annotation.DeclareCommandAccessLevel;
+import com.efonian.cassandra.discord.commands.annotation.Disabled;
+import com.efonian.cassandra.discord.commands.annotation.GuildOnly;
 import com.efonian.cassandra.util.UtilFile;
 import com.efonian.cassandra.util.UtilRuntime;
 import com.google.gson.*;

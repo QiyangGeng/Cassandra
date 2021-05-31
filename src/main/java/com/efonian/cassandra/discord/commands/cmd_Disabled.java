@@ -1,7 +1,7 @@
-package com.efonian.cassandra.discord.command;
+package com.efonian.cassandra.discord.commands;
 
-import com.efonian.cassandra.discord.command.annotation.DeclareCommandAccessLevel;
-import com.efonian.cassandra.discord.command.annotation.Disabled;
+import com.efonian.cassandra.discord.commands.annotation.DeclareCommandAccessLevel;
+import com.efonian.cassandra.discord.commands.annotation.Disabled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

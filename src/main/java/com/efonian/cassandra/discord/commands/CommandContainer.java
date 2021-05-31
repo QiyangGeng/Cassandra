@@ -1,4 +1,4 @@
-package com.efonian.cassandra.discord.command;
+package com.efonian.cassandra.discord.commands;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
