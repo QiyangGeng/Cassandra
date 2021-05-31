@@ -1,4 +1,4 @@
-package com.efonian.cassandra.discord.service;
+package com.efonian.cassandra.discord.services;
 
 import net.dv8tion.jda.api.entities.User;
 
