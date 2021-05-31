@@ -137,24 +137,6 @@ public final class CommandManager {
         return null;
     }
     
-    /**
-     * This method only starts the execution of the command, but does not check whether the command should be executed;
-     * please check for user/member permission and previous usage before call.
-     *
-     * This method will use reflection to create a copy of the command, which is a bit slow, but really cool, so eh.
-     * A new CompletableFuture will be created which will execute the command asynchronously, and the execution method
-     * will return {@code true} if the command is no longer active or finished, in which case it will be removed from a
-     * list of active commands and garbage collected. The command may also return {@code false} in which case it will be
-     * kept around until later, for cases such as commands with multiple stages requiring user input. Before the execute
-     * returns {@code true} or {@code false}, it may timeout or complete exceptionally, in which case it will be logged
-     * and removed to be garbage collected. The timeout is linked with the thread which executes it; if the command
-     * requires more time, simply start another thread and return false. Do not unnecessary holt the thread.
-     *
-     * IMPORTANT: Do not await for response from external components in an command executor thread
-     *
-     * @param cmd   The command which is to be executed
-     * @param cc    The details of the command parameters and such in a packaged container
-     */
     private void startTask(Command cmd, CommandContainer cc) {
         long client = cc.event.getAuthor().getIdLong();
         logger.info("Accepted command of class " + cmd.getClass().getSimpleName());
