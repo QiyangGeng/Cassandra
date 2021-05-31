@@ -13,7 +13,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,10 +26,10 @@ public class cmd_QRCode extends Command {
     
     @Override
     boolean execute(CommandContainer cc) {
-        if(cc.args.length == 0)
+        if(cc.args.size() == 0)
             throw new IllegalArgumentException();
         
-        switch(cc.args[0]) {
+        switch(cc.args.get(0)) {
             case "decode":
                 decode(cc);
                 break;
@@ -81,10 +80,10 @@ public class cmd_QRCode extends Command {
     }
     
     private void encode(CommandContainer cc) {
-        if(cc.args.length < 2)
+        if(cc.args.size() < 2)
             throw new IllegalArgumentException();
         
-        String targetText = String.join(" ", Arrays.copyOfRange(cc.args, 1, cc.args.length));
+        String targetText = cc.args.get(1);
         
         try {
             sendImage(cc.event.getChannel(), UtilQRCode.generateQRCodeImage(targetText), "qr_code");

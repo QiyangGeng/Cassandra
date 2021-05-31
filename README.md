@@ -113,7 +113,6 @@ application.
 Finally, here is a non-inclusive list of things I am considering getting done:
 
 ### Short term:
-- Upgrade CommandContainer parser
 - Implement DebugManager
 - Implement `cmd_Crafty`
 - Implement GuildAudioManager

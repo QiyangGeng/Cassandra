@@ -27,8 +27,8 @@ public class cmd_Clear extends Command {
     @Override
     boolean execute(CommandContainer cc) {
         AtomicInteger numCollect = new AtomicInteger(CAPACITY);
-        if(cc.args.length > 0 && cc.args[0].chars().allMatch(Character::isDigit) && Integer.parseInt(cc.args[0]) <= CAPACITY)
-            numCollect.set(Integer.parseInt(cc.args[0]));
+        if(cc.args.size() > 0 && cc.args.get(0).chars().allMatch(Character::isDigit) && Integer.parseInt(cc.args.get(0)) <= CAPACITY)
+            numCollect.set(Integer.parseInt(cc.args.get(0)));
     
         long messageId = cc.event.getChannel().sendMessage("Collecting " + (numCollect.get() == CAPACITY? "":numCollect) + " messages...").complete().getIdLong();
         List<String> messages = Collections.synchronizedList(new ArrayList<>());
