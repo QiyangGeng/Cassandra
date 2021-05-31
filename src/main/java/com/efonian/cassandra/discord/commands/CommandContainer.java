@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
  * A container which stores parsed information from a received message in a form useful to commands
  */
 public class CommandContainer {
+    // Source: https://stackoverflow.com/questions/7804335/split-string-on-spaces-in-java-except-if-between-quotes-i-e-treat-hello-wor
     private static final Pattern argPattern = Pattern.compile("([^\"]\\S*|\".+?\")\\s*");
     
     MessageReceivedEvent event;
