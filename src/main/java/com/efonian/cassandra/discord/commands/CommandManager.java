@@ -28,7 +28,7 @@ public final class CommandManager {
     
     private static final String PREFIX = "!";
     
-    @Value("${cassandra.discord.command.default.lifetime}")
+    @Value("${cassandra.discord.commands.default.lifetime}")
     private long defaultCommandLifetime;
     private final TimeUnit defaultCommandTimeUnit = TimeUnit.SECONDS;
     
