@@ -133,7 +133,7 @@ public final class CommandManager {
         CompletableFuture
                 .runAsync(() -> cmd.execute(cc), executors)
                 // commented out since the default value for the below method is precomputed, uncomment if the API ever gives a lazy option
-//                    .completeOnTimeout(handleTimeout(cmdCopy, cc, client), defaultCommandLifetime, defaultCommandTimeUnit)
+//                    .completeOnTimeout(handleTimeout(cmdCopy, cc), defaultCommandLifetime, defaultCommandTimeUnit)
                 .orTimeout(defaultCommandLifetime, defaultCommandTimeUnit)
                 .thenAcceptAsync(result -> handleCommandFirstExecutionComplete(cmd, cc))
                 .exceptionallyAsync(throwable -> handleCommandException(throwable.getCause(), cmd, cc));
