@@ -60,7 +60,7 @@ public final class UtilRuntime {
         return args;
     }
     
-    public Instant getStartTime() {
+    public static Instant getStartTime() {
         return startTime;
     }
     
