@@ -157,6 +157,7 @@ abstract class Command {
             setThumbnail(getSelfAvatar());
             setAuthor(getSelfName());
             setTimestamp(Instant.now());
+            setColor(0xFF40E0D0);
         }};
     }
     
