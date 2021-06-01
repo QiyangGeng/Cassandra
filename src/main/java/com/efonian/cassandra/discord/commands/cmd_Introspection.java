@@ -24,19 +24,18 @@ public class cmd_Introspection extends Command {
             potentialCommandName = potentialCommandName.substring(0, 4)
                     + potentialCommandName.substring(4, 5).toUpperCase()
                     + potentialCommandName.substring(5);
-        }
-        else {
+        } else {
             potentialCommandName = potentialCommandName.substring(0, 1).toUpperCase() + potentialCommandName.substring(1);
             potentialCommandName = "cmd_" + potentialCommandName;
         }
-    
+        
         Path directory = Paths.get("./src/main/java/com/efonian/cassandra/discord/commands/" + potentialCommandName + ".java");
         
         if(!Files.exists(directory)) {
             cc.event.getChannel().sendMessage("Cannot find command " + potentialCommandName).queue();
             return;
         }
-    
+        
         cc.event.getChannel().sendFile(directory.toFile()).queue();
     }
     
