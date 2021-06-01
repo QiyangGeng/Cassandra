@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 @ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 @DeclareCommandAccessLevel(accessLevel=CommandAccessLevel.FULL)
-public class cmd_Exception extends Command {
+class cmd_Exception extends Command {
     @Override
     void execute(CommandContainer cc) {
         throw new RuntimeException("Exception thrown from exception command");
@@ -21,7 +21,7 @@ public class cmd_Exception extends Command {
     }
     
     @Override
-    public String description() {
+    String description() {
         return "throws a RunTimeException";
     }
 }

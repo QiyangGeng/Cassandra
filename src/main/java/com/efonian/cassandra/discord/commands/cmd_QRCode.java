@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Component
 @ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 @DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.TRUSTED)
-public class cmd_QRCode extends Command {
+class cmd_QRCode extends Command {
     private static final Logger logger = LoggerFactory.getLogger(cmd_QRCode.class);
     
     private static final int MESSAGE_HISTORY_LIMIT = 5;
@@ -98,7 +98,7 @@ public class cmd_QRCode extends Command {
     }
     
     @Override
-    public String description() {
+    String description() {
         return "decode: decodes the QR code attached to the command message if there are any, or in the most recent " +
                 MESSAGE_HISTORY_LIMIT + " messages immediately before the command message\n" +
                 "encode [text]: encodes text into QR code";

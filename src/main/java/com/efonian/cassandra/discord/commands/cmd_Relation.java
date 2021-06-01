@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Component
 @ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 @DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.MODERATOR)
-public class cmd_Relation extends Command {
+class cmd_Relation extends Command {
     @Override
     void execute(CommandContainer cc) {
         List<User> users = userList(cc);
@@ -109,7 +109,7 @@ public class cmd_Relation extends Command {
     }
     
     @Override
-    public String description() {
+    String description() {
         return "[user ID]+ gives an overview of shared guilds among a group of users in which this bot is present; " +
                 "if only one user ID is provided, then the user ID of the caller will also be user, otherwise, the " +
                 "user ID of the caller has to be explicitly included to be added to the graph;" +

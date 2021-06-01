@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 @ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 @DeclareCommandAccessLevel(guildAccessLevel = CommandAccessLevel.MODERATOR)
-public class cmd_Clear extends Command {
+class cmd_Clear extends Command {
     private static final int CAPACITY = 10000;
     
     
@@ -49,7 +49,7 @@ public class cmd_Clear extends Command {
     }
     
     @Override
-    public String description() {
+    String description() {
         return "clear the current channel";
     }
 }

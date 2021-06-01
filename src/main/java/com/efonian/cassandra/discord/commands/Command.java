@@ -25,7 +25,7 @@ import java.util.List;
 /**
  * A command executes a task with given parameters
  */
-public abstract class Command {
+abstract class Command {
     private static final Logger logger = LoggerFactory.getLogger(Command.class);
     
     private CommandManager cmdManager;
@@ -86,7 +86,7 @@ public abstract class Command {
         throw new RuntimeException("Called dynamic Assign method of Command class");
     }
     
-    public static void sendHelpMessage(MessageChannel channel, Command command) {
+    static void sendHelpMessage(MessageChannel channel, Command command) {
         channel.sendMessage(new EmbedBuilder() {{
             setTitle(command.getClass().getSimpleName().substring(4));
             setDescription(command.description());
@@ -96,7 +96,7 @@ public abstract class Command {
         }}.build()).queue();
     }
     
-    public static void sendImage(MessageChannel channel, String message, BufferedImage image, String name, String formatName) {
+    static void sendImage(MessageChannel channel, String message, BufferedImage image, String name, String formatName) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         try {
             ImageIO.write(image, formatName, bytes);

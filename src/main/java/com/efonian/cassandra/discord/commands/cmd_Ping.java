@@ -10,7 +10,7 @@ import java.util.List;
 @Component
 @ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 @DeclareCommandAccessLevel
-public class cmd_Ping extends Command {
+class cmd_Ping extends Command {
     @Override
     void execute(CommandContainer cc) {
         cc.event.getChannel().sendMessage("_ _").queue(message ->
@@ -28,7 +28,7 @@ public class cmd_Ping extends Command {
     }
     
     @Override
-    public String description() {
+    String description() {
         return "pong (shows the ping)";
     }
 }

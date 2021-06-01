@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 @ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 @DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.DYNAMIC)
-public class cmd_Crafty extends Command {
+class cmd_Crafty extends Command {
     @Override
     void execute(CommandContainer cc) {
     

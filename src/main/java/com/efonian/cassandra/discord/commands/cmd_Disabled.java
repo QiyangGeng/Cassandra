@@ -9,7 +9,7 @@ import java.util.List;
 @Disabled
 @Component
 @DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.FULL)
-public class cmd_Disabled extends Command {
+class cmd_Disabled extends Command {
     @Override
     void execute(CommandContainer cc) {
         cc.event.getChannel().sendMessage("what").queue();
@@ -21,7 +21,7 @@ public class cmd_Disabled extends Command {
     }
     
     @Override
-    public String description() {
+    String description() {
         return "you should not see this";
     }
 }

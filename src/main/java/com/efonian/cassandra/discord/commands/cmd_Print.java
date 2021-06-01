@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Disabled
 @ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 @DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.FULL)
-public class cmd_Print extends Command {
+class cmd_Print extends Command {
     // https://gist.github.com/matthewzring/9f7bbfd102003963f9be7dbcf7d40e51#syntax-highlighting
     private static final Map<String, String> fileExtToSyntaxName = new ConcurrentHashMap<>() {{
         put("asciidoc", "asciidoc");
@@ -66,7 +66,7 @@ public class cmd_Print extends Command {
     }
     
     @Override
-    public String description() {
+    String description() {
         return "wip";
     }
 }

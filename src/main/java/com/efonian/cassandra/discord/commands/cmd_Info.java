@@ -1,4 +1,4 @@
 package com.efonian.cassandra.discord.commands;
 
-public class cmd_Info {
+class cmd_Info {
 }

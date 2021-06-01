@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 @ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 @DeclareCommandAccessLevel(accessLevel=CommandAccessLevel.FULL)
-public class cmd_Timeout extends Command {
+class cmd_Timeout extends Command {
     @Override
     void execute(CommandContainer cc) {
         Thread currentThread = Thread.currentThread();
@@ -29,7 +29,7 @@ public class cmd_Timeout extends Command {
     }
     
     @Override
-    public String description() {
+    String description() {
         return "indefinitely hangs the thread executing the command if said thread is daemon; o/w does nothing";
     }
 }

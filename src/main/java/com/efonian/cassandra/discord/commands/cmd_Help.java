@@ -13,7 +13,7 @@ import java.util.List;
 @Component
 @ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 @DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.LIMITED)
-public class cmd_Help extends Command {
+class cmd_Help extends Command {
     @Override
     void execute(CommandContainer cc) {
         CommandAccessLevel userAL = CommandAccessManager.findUserAccessLevel(cc.event.getAuthor().getIdLong());
@@ -43,7 +43,7 @@ public class cmd_Help extends Command {
     }
     
     @Override
-    public String description() {
+    String description() {
         return "display help message";
     }
 }
