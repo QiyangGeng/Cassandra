@@ -32,7 +32,7 @@ class cmd_Help extends Command {
             setDescription("Your access level: " + StringUtils.capitalize(userAL.name().toLowerCase()));
             for(Command cmd: availableCommands)
                 addField(cmd.getClass().getSimpleName().substring(4), "```" + cmd.description() + "```", false);
-            setAuthor(DiscordBot.getSelfName());
+            setAuthor(getSelfName());
             setTimestamp(Instant.now());
         }}.build()).queue();
     }
