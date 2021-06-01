@@ -18,7 +18,7 @@ class cmd_Info extends Command {
     @Override
     void execute(CommandContainer cc) {
         cc.event.getChannel().sendMessage(new EmbedBuilder() {{
-            setTitle(getSelfName());
+            setTitle("Info");
             setThumbnail(getSelfAvatar());
             
             addField("Start time", DateTimeFormatter
@@ -28,6 +28,7 @@ class cmd_Info extends Command {
                     .format(UtilRuntime.getStartTime()), false);
             addField("Hmm", "Yeah I'm not tracking anything else right now", false);
             
+            setAuthor(getSelfName());
             setTimestamp(Instant.now());
         }}.build()).queue();
     }
