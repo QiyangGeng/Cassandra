@@ -9,6 +9,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+//import org.graalvm.polyglot.*;
+//import org.graalvm.polyglot.proxy.*;
+
 // make a ProcessBuilder Util thingamajiggy
 public final class CraftyClientJWrapper {
     private static final Logger logger = LoggerFactory.getLogger(CraftyClientJWrapper.class);
@@ -40,4 +43,13 @@ public final class CraftyClientJWrapper {
             return null;
         }
     }
+    
+//    public static List<String> craftyClient(String... args) {
+//        try(Context context = Context.create()) {
+//            context.eval("python", "import json\nimport sys\nfrom crafty_client import CraftyWeb");
+//            Value file = context.eval("python", "open(\"crafty.json\", 'r')");
+//            System.out.println(file);
+//        }
+//        return null;
+//    }
 }
