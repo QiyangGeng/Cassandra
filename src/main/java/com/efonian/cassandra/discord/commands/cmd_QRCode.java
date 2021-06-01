@@ -9,7 +9,6 @@ import com.google.zxing.WriterException;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.awt.image.BufferedImage;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 @DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.TRUSTED)
 class cmd_QRCode extends Command {
     private static final Logger logger = LoggerFactory.getLogger(cmd_QRCode.class);

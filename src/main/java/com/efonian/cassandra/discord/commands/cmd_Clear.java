@@ -1,7 +1,6 @@
 package com.efonian.cassandra.discord.commands;
 
 import com.efonian.cassandra.discord.commands.annotation.DeclareCommandAccessLevel;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -11,7 +10,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
-@ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 @DeclareCommandAccessLevel(guildAccessLevel = CommandAccessLevel.MODERATOR)
 class cmd_Clear extends Command {
     private static final int CAPACITY = 10000;

@@ -3,7 +3,6 @@ package com.efonian.cassandra.discord.commands;
 import com.efonian.cassandra.discord.DiscordBot;
 import com.efonian.cassandra.discord.commands.annotation.DeclareCommandAccessLevel;
 import net.dv8tion.jda.api.EmbedBuilder;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -11,7 +10,6 @@ import java.time.Instant;
 import java.util.List;
 
 @Component
-@ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 @DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.LIMITED)
 class cmd_Help extends Command {
     @Override

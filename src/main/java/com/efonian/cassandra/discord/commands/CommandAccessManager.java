@@ -11,7 +11,6 @@ import com.google.gson.reflect.TypeToken;
 import io.vavr.control.Either;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -23,7 +22,6 @@ import java.util.stream.Collectors;
 
 
 @Component
-@ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 public final class CommandAccessManager {
     private static final Logger logger = LoggerFactory.getLogger(CommandAccessManager.class);
     

@@ -11,7 +11,6 @@ import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.Multigraph;
 import org.jungrapht.visualization.layout.algorithms.CircleLayoutAlgorithm;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.awt.image.BufferedImage;
@@ -21,7 +20,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Component
-@ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 @DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.MODERATOR)
 class cmd_Relation extends Command {
     @Override

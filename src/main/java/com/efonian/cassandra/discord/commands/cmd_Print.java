@@ -2,7 +2,6 @@ package com.efonian.cassandra.discord.commands;
 
 import com.efonian.cassandra.discord.commands.annotation.DeclareCommandAccessLevel;
 import com.efonian.cassandra.discord.commands.annotation.Disabled;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @Disabled
-@ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 @DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.FULL)
 class cmd_Print extends Command {
     // https://gist.github.com/matthewzring/9f7bbfd102003963f9be7dbcf7d40e51#syntax-highlighting
