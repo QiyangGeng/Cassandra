@@ -11,9 +11,8 @@ import java.util.List;
 @DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.FULL)
 public class cmd_Disabled extends Command {
     @Override
-    boolean execute(CommandContainer cc) {
+    void execute(CommandContainer cc) {
         cc.event.getChannel().sendMessage("what").queue();
-        return false;
     }
     
     @Override

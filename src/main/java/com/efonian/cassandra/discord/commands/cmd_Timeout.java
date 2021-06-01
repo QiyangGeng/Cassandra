@@ -11,17 +11,16 @@ import java.util.List;
 @DeclareCommandAccessLevel(accessLevel=CommandAccessLevel.FULL)
 public class cmd_Timeout extends Command {
     @Override
-    boolean execute(CommandContainer cc) {
+    void execute(CommandContainer cc) {
         Thread currentThread = Thread.currentThread();
         
         if(!currentThread.isDaemon())
-            return false;
+            return;
         
         // a while true loop could be added here to be more evil, but that is besides the point in this case
         try {
             currentThread.join();
         } catch(InterruptedException ignored) {}
-        return false;
     }
     
     @Override

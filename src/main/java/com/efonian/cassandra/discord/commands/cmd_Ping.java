@@ -12,7 +12,7 @@ import java.util.List;
 @DeclareCommandAccessLevel
 public class cmd_Ping extends Command {
     @Override
-    boolean execute(CommandContainer cc) {
+    void execute(CommandContainer cc) {
         cc.event.getChannel().sendMessage("_ _").queue(message ->
                 cc.event.getChannel().editMessageById(message.getIdLong(), new EmbedBuilder() {{
             setTitle("Pong!");
@@ -20,7 +20,6 @@ public class cmd_Ping extends Command {
                     - cc.event.getMessage().getTimeCreated().toInstant().toEpochMilli()) + "ms");
             setColor(0xFF40E0D0);
         }}.build()).queue());
-        return false;
     }
     
     @Override

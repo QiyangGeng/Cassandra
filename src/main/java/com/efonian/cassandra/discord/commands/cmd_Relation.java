@@ -25,13 +25,11 @@ import java.util.stream.Collectors;
 @DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.MODERATOR)
 public class cmd_Relation extends Command {
     @Override
-    boolean execute(CommandContainer cc) {
+    void execute(CommandContainer cc) {
         List<User> users = userList(cc);
         Graph<ColouredVertex<String>, RelationshipEdge> graph = graphUsers(users, cc);
         BufferedImage renderedGraph = UtilGraph.renderWithColouredVertices(graph, new CircleLayoutAlgorithm<>());
         sendImage(cc.event.getChannel(), renderedGraph, "relations");
-        
-        return false;
     }
     
     private List<User> userList(CommandContainer cc) {

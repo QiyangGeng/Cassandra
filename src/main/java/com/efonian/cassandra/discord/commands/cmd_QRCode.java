@@ -25,7 +25,7 @@ public class cmd_QRCode extends Command {
     private static final int MESSAGE_HISTORY_LIMIT = 5;
     
     @Override
-    boolean execute(CommandContainer cc) {
+    void execute(CommandContainer cc) {
         if(cc.args.size() == 0)
             throw new IllegalArgumentException();
         
@@ -41,7 +41,6 @@ public class cmd_QRCode extends Command {
             default:
                 throw new IllegalArgumentException();
         }
-        return false;
     }
     
     private void decode(CommandContainer cc) {

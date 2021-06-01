@@ -51,8 +51,8 @@ public class cmd_Print extends Command {
             "vbscript","vbscript-html","verilog","vhdl","vim","x86asm","xl","xml","xquery","yaml","zephir");
     
     @Override
-    boolean execute(CommandContainer cc) {
-        return false;
+    void execute(CommandContainer cc) {
+    
     }
     
     @Override

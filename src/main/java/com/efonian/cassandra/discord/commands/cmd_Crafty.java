@@ -14,8 +14,8 @@ import java.util.List;
 @DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.DYNAMIC)
 public class cmd_Crafty extends Command {
     @Override
-    boolean execute(CommandContainer cc) {
-        return false;
+    void execute(CommandContainer cc) {
+    
     }
     
     @Override

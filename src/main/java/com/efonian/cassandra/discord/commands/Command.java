@@ -64,10 +64,8 @@ public abstract class Command {
      * Note: due to the way the CommandManager is implemented, commands can just throw an {@code IllegalArgumentException}
      * and its help message will be displayed to the user
      * @param cc    The container with command information
-     * @return      Whether the command is awaiting further user input. Return true to have a reference kept, false
-     *              otherwise.
      */
-    abstract boolean execute(CommandContainer cc);
+    abstract void execute(CommandContainer cc);
     
     /**
      * Use List.of() to create an immutable list of invokes.

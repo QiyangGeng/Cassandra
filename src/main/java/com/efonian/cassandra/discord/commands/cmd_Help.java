@@ -15,7 +15,7 @@ import java.util.List;
 @DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.LIMITED)
 public class cmd_Help extends Command {
     @Override
-    boolean execute(CommandContainer cc) {
+    void execute(CommandContainer cc) {
         CommandAccessLevel userAL = CommandAccessManager.findUserAccessLevel(cc.event.getAuthor().getIdLong());
         List<Command> availableCommands = CommandAccessManager.getAvailableCommands(cc);
         
@@ -35,7 +35,6 @@ public class cmd_Help extends Command {
             setAuthor(DiscordBot.getSelfName());
             setTimestamp(Instant.now());
         }}.build()).queue();
-        return false;
     }
     
     @Override

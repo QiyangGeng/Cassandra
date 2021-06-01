@@ -11,7 +11,7 @@ import java.util.List;
 @DeclareCommandAccessLevel(accessLevel=CommandAccessLevel.FULL)
 public class cmd_Exception extends Command {
     @Override
-    boolean execute(CommandContainer cc) {
+    void execute(CommandContainer cc) {
         throw new RuntimeException("Exception thrown from exception command");
     }
     

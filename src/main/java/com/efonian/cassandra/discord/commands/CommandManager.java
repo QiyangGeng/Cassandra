@@ -34,7 +34,6 @@ public final class CommandManager {
     
     private final Map<List<String>, Command> registeredCommands = new ConcurrentHashMap<>();
     private final ExecutorService executors = Executors.newFixedThreadPool(4, new DaemonThreadFactory());
-    private final Map<Long, Command> commandsQueue = new ConcurrentHashMap<>();
     
     private EventListenerManager eventListenerManager;
     
@@ -114,13 +113,6 @@ public final class CommandManager {
             return false;
         })) return false;
         
-        // Multiple command requests check
-        if(commandsQueue.containsKey(cc.event.getAuthor().getIdLong()) && !CommandAccessManager.canRequestMulti(cc.event.getAuthor().getIdLong())) {
-            cc.event.getChannel().sendMessage(cc.event.getAuthor().getAsMention() + " Busy working on command " +
-                    commandsQueue.get(cc.event.getAuthor().getIdLong()).invokes().get(0)).queue();
-            return false;
-        }
-        
         return true;
     }
     
@@ -138,38 +130,30 @@ public final class CommandManager {
     }
     
     private void startTask(Command cmd, CommandContainer cc) {
-        long client = cc.event.getAuthor().getIdLong();
         logger.info("Accepted command of class " + cmd.getClass().getSimpleName());
     
         CompletableFuture
-                .supplyAsync(() -> cmd.execute(cc), executors)
+                .runAsync(() -> cmd.execute(cc), executors)
                 // commented out since the default value for the below method is precomputed, uncomment if the API ever gives a lazy option
 //                    .completeOnTimeout(handleTimeout(cmdCopy, cc, client), defaultCommandLifetime, defaultCommandTimeUnit)
                 .orTimeout(defaultCommandLifetime, defaultCommandTimeUnit)
-                .thenAcceptAsync(result -> handleCommandFirstExecutionComplete(result, cmd, cc, client))
-                .exceptionallyAsync(throwable -> handleCommandException(throwable.getCause(), cmd, cc, client));
+                .thenAcceptAsync(result -> handleCommandFirstExecutionComplete(cmd, cc))
+                .exceptionallyAsync(throwable -> handleCommandException(throwable.getCause(), cmd, cc));
     }
     
-    private void handleCommandFirstExecutionComplete(boolean result, Command cmd, CommandContainer cc, long client) {
-        if (result) {
-            logger.info(String.format("Completed command %s for (%s)", cmd.getClass().getSimpleName(), cc.event.getAuthor().getName()));
-            logger.info("Commands left in progress: " + commandsQueue.size());
-            commandsQueue.put(client, cmd);
-        } else {
-            logger.info(String.format("Completed command %s for (%s)", cmd.getClass().getSimpleName(), cc.event.getAuthor().getName()));
-        }
+    private void handleCommandFirstExecutionComplete(Command cmd, CommandContainer cc) {
+        logger.info(String.format("Completed command %s for (%s)", cmd.getClass().getSimpleName(), cc.event.getAuthor().getName()));
     }
     
-    private void handleTimeout(Command cmd, CommandContainer cc, long client) {
+    private void handleTimeout(Command cmd, CommandContainer cc) {
         logger.info(String.format("Timed out completing command %s for (%s)",
                 cmd.getClass().getSimpleName(),
                 cc.event.getAuthor().getName()
         ));
         cc.event.getChannel().sendMessage(String.format("%s Timed out on task", cc.event.getAuthor().getAsMention())).queue();
-        commandsQueue.remove(client);
     }
     
-    private Void handleCommandException(Throwable throwable, Command cmd, CommandContainer cc, long client) {
+    private Void handleCommandException(Throwable throwable, Command cmd, CommandContainer cc) {
         if(throwable.getClass().equals(RuntimeException.class)) {
             if(throwable.getCause() != null)
                 throwable = throwable.getCause();
@@ -178,7 +162,7 @@ public final class CommandManager {
         // Special cases
         // see comment in the startTask method
         if(throwable instanceof TimeoutException) {
-            handleTimeout(cmd, cc, client);
+            handleTimeout(cmd, cc);
             return null;
         } else if(throwable instanceof IllegalArgumentException) {
             Command.sendHelpMessage(cc.event.getChannel(), cmd);
@@ -186,7 +170,6 @@ public final class CommandManager {
                     cmd.getClass().getSimpleName(),
                     cc.event.getAuthor().getName()
             ));
-            commandsQueue.remove(client);
             return null;
         }
         
@@ -199,7 +182,6 @@ public final class CommandManager {
         ));
         logger.info(throwable.getMessage());
 //        throwable.printStackTrace();
-        commandsQueue.remove(client);
         return null;
     }
     
@@ -218,7 +200,6 @@ public final class CommandManager {
      */
     @PreDestroy
     private void shutdown() {
-        commandsQueue.values().forEach(Command::shutdown);
         UtilRuntime.shutDownExecutorService(executors);
     }
     

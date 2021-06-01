@@ -22,10 +22,9 @@ public class cmd_Clear extends Command {
      * the default value is stored in <c>CAPACITY</c>. Due to the asynchronous nature of the implementation, the
      * messages may not be deleted in any particular order.
      * @param cc    The container with command information
-     * @return      Whether the command has finished execution
      */
     @Override
-    boolean execute(CommandContainer cc) {
+    void execute(CommandContainer cc) {
         AtomicInteger numCollect = new AtomicInteger(CAPACITY);
         if(cc.args.size() > 0 && cc.args.get(0).chars().allMatch(Character::isDigit) && Integer.parseInt(cc.args.get(0)) <= CAPACITY)
             numCollect.set(Integer.parseInt(cc.args.get(0)));
@@ -42,7 +41,6 @@ public class cmd_Clear extends Command {
             }
             return messages.size() < CAPACITY;
         }).thenRun(() -> cc.event.getChannel().purgeMessagesById(messages));
-        return false;
     }
     
     @Override
