@@ -53,13 +53,15 @@ class cmd_Relation extends Command {
                 users.add(caller);
                 users.add(getSelfUser());
                 
-                ColouredVertex<String> selfVertex = new ColouredVertex<>(getSelfName(), userAvatarAverageColour(getSelfUser()));
-                ColouredVertex<String> userVertex = new ColouredVertex<>(caller.getName(), userAvatarAverageColour(caller));
-                
-                users.forEach(u -> graph.addVertex(new ColouredVertex<>(u.getName(), userAvatarAverageColour(u))));
-                cc.event.getAuthor().getMutualGuilds().forEach(guild -> graph.addEdge(userVertex, selfVertex, new RelationshipEdge(guild.getName())));
-                
-                return graph;
+//                ColouredVertex<String> selfVertex = new ColouredVertex<>(getSelfName(), userAvatarAverageColour(getSelfUser()));
+//                ColouredVertex<String> userVertex = new ColouredVertex<>(caller.getName(), userAvatarAverageColour(caller));
+//
+//                users.forEach(u -> graph.addVertex(new ColouredVertex<>(u.getName(), userAvatarAverageColour(u))));
+//                // The getMutualGuilds() method doesn't return anything
+//                cc.event.getAuthor().getMutualGuilds().forEach(guild -> graph.addEdge(userVertex, selfVertex, new RelationshipEdge(guild.getName())));
+//
+//                return graph;
+                break;
 
             case 1:
                 // At this point, the users list has one user. Our goal is to populate the list with at least two
