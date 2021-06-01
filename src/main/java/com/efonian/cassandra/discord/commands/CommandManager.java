@@ -166,6 +166,7 @@ public final class CommandManager {
                     cmd.getClass().getSimpleName(),
                     cc.event.getAuthor().getName()
             ));
+            throwable.printStackTrace();
             return null;
         }
         
@@ -176,8 +177,8 @@ public final class CommandManager {
                 cc.event.getAuthor().getName(),
                 throwable.getClass().getName()
         ));
-        logger.info(throwable.getMessage());
-//        throwable.printStackTrace();
+        logger.info("Exception message: " + throwable.getMessage());
+        throwable.printStackTrace();
         return null;
     }
     
