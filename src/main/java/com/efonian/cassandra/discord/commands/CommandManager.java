@@ -107,13 +107,11 @@ public final class CommandManager {
             return false;
         
         // Permission check
-        if(!CommandAccessManager.hasPermission(cc, command).getOrElseGet((msg) -> {
+        return CommandAccessManager.hasPermission(cc, command).getOrElseGet((msg) -> {
             cc.event.getChannel().sendMessage(
                     cc.event.getAuthor().getAsMention() + " Unable to request command: " + msg).queue();
             return false;
-        })) return false;
-        
-        return true;
+        });
     }
     
     /**
