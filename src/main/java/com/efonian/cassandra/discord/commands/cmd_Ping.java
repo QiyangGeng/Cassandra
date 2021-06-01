@@ -1,7 +1,6 @@
 package com.efonian.cassandra.discord.commands;
 
 import com.efonian.cassandra.discord.commands.annotation.DeclareCommandAccessLevel;
-import net.dv8tion.jda.api.EmbedBuilder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -14,12 +13,11 @@ class cmd_Ping extends Command {
     @Override
     void execute(CommandContainer cc) {
         cc.event.getChannel().sendMessage("_ _").queue(message ->
-                cc.event.getChannel().editMessageById(message.getIdLong(), new EmbedBuilder() {{
-            setTitle("Pong!");
-            setDescription(":stopwatch: " + (message.getTimeCreated().toInstant().toEpochMilli()
-                    - cc.event.getMessage().getTimeCreated().toInstant().toEpochMilli()) + "ms");
-            setColor(0xFF40E0D0);
-        }}.build()).queue());
+                cc.event.getChannel().editMessageById(message.getIdLong(), simpleEmbedBuilder("Pong!")
+                        .setDescription(":stopwatch: " + (message.getTimeCreated().toInstant().toEpochMilli()
+                                - cc.event.getMessage().getTimeCreated().toInstant().toEpochMilli()) + "ms")
+                        .setColor(0xFF40E0D0)
+                        .build()).queue());
     }
     
     @Override
