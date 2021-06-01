@@ -161,6 +161,14 @@ abstract class Command {
         }};
     }
     
+    protected static String codeBlockWrap(String content) {
+        return codeBlockWrap(content, "");
+    }
+    
+    protected static String codeBlockWrap(String content, String lang) {
+        return "```" + lang + "\n" + content + "```";
+    }
+    
     @Autowired
     private void setCommandManager(CommandManager manager) {
         this.cmdManager = manager;
