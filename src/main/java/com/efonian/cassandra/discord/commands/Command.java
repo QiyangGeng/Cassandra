@@ -112,7 +112,14 @@ abstract class Command {
     }
     
     protected static void sendImage(MessageChannel channel, BufferedImage image, String name, String formatName) {
-        sendImage(channel, "_ _", image, name, formatName);
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(image, formatName, bytes);
+            bytes.close();
+            channel.sendFile(bytes.toByteArray(), name + "." + formatName).queue();
+        } catch(IOException e) {
+            logger.warn("IOException when trying to write BufferedImage to ByteArrayOutputStream, or closing stream: " + e.getMessage());
+        }
     }
     
     protected static void sendImage(MessageChannel channel, BufferedImage image, String name) {
