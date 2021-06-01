@@ -151,6 +151,15 @@ abstract class Command {
         return DiscordBot.getSelfAvatarAverageColour();
     }
     
+    protected static EmbedBuilder simpleEmbedBuilder(String title) {
+        return new EmbedBuilder() {{
+            setTitle(title);
+            setThumbnail(getSelfAvatar());
+            setAuthor(getSelfName());
+            setTimestamp(Instant.now());
+        }};
+    }
+    
     @Autowired
     private void setCommandManager(CommandManager manager) {
         this.cmdManager = manager;
