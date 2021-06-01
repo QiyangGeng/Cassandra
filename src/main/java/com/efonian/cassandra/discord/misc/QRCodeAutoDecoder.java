@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -20,7 +19,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-@ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 public class QRCodeAutoDecoder {
     private EventListenerManager eventManager;
     
