@@ -63,18 +63,11 @@ import net.dv8tion.jda.api.events.user.UserTypingEvent;
 import net.dv8tion.jda.api.events.user.update.*;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
 
 @Component
-@Scope(value= ConfigurableBeanFactory.SCOPE_SINGLETON)
-@ConditionalOnBean(EventListenerManager.class)
-@ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 public class EventListener extends ListenerAdapter {
     EventListenerManager manager;
     

@@ -1,12 +1,7 @@
 package com.efonian.cassandra.discord.event;
 
-import com.efonian.cassandra.discord.DiscordBot;
 import com.efonian.cassandra.util.UtilRuntime;
 import net.dv8tion.jda.api.events.GenericEvent;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
@@ -31,9 +26,6 @@ import java.util.function.Consumer;
  * to complete the operation; for commands, use the thread pool inside the command manager.
  */
 @Component
-@Scope(value= ConfigurableBeanFactory.SCOPE_SINGLETON)
-@ConditionalOnBean(DiscordBot.class)
-@ConditionalOnProperty(value = "cassandra.discord.init", havingValue = "true")
 public final class EventListenerManager {
     private static final ScheduledExecutorService deletionScheduler = Executors.newSingleThreadScheduledExecutor();
     
