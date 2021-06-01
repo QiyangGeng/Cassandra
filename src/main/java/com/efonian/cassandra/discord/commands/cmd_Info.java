@@ -2,10 +2,8 @@ package com.efonian.cassandra.discord.commands;
 
 import com.efonian.cassandra.discord.commands.annotation.DeclareCommandAccessLevel;
 import com.efonian.cassandra.util.UtilRuntime;
-import net.dv8tion.jda.api.EmbedBuilder;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
@@ -17,20 +15,14 @@ import java.util.Locale;
 class cmd_Info extends Command {
     @Override
     void execute(CommandContainer cc) {
-        cc.event.getChannel().sendMessage(new EmbedBuilder() {{
-            setTitle("Info");
-            setThumbnail(getSelfAvatar());
-            
-            addField("Start time", DateTimeFormatter
-                    .ofLocalizedDate(FormatStyle.FULL)
-                    .withLocale(Locale.CANADA)
-                    .withZone(ZoneId.systemDefault())
-                    .format(UtilRuntime.getStartTime()), false);
-            addField("Hmm", "Yeah I'm not tracking anything else right now", false);
-            
-            setAuthor(getSelfName());
-            setTimestamp(Instant.now());
-        }}.build()).queue();
+        cc.event.getChannel().sendMessage(simpleEmbedBuilder("Info")
+                .addField("Start time", DateTimeFormatter
+                        .ofLocalizedDate(FormatStyle.FULL)
+                        .withLocale(Locale.CANADA)
+                        .withZone(ZoneId.systemDefault())
+                        .format(UtilRuntime.getStartTime()), false)
+                .addField("Hmm", "Yeah I'm not tracking anything else right now", false)
+                .build()).queue();
     }
     
     @Override
