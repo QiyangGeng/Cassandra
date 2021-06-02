@@ -154,6 +154,13 @@
             <artifactId>jool</artifactId>
             <version>0.9.14</version>
         </dependency>
+
+<!--        Image upscaling-->
+        <dependency>
+            <groupId>com.soywiz</groupId>
+            <artifactId>kaifu2x</artifactId>
+            <version>0.4.0</version>
+        </dependency>
     </dependencies>
 
     <repositories>
