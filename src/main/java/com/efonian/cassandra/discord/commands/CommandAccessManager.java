@@ -39,15 +39,10 @@ public final class CommandAccessManager {
         CommandAccessLevelContainer calc = commandAccessLevels.get(command);
     
         if(calc == null)                                                return Either.left("command access level is not registered");
-        
-        // these should also print to debug channel, when the manager is implemented...
         if(calc.guildAccessLevel.equals(CommandAccessLevel.NULL))       return Either.left("command guild access level is registered as null");
         if(calc.privateAccessLevel.equals(CommandAccessLevel.NULL))     return Either.left("command private access level is registered as null");
-        
         if(!cc.event.isFromGuild() && calc.guildOnly)                   return Either.left("this command can only be used in servers");
-    
         if(cc.event.getAuthor().isBot() && !calc.botFriendly)           return Either.right(false);
-        
         return Either.right(findAndCompareAccessLevel(cc, command, calc));
     }
     
