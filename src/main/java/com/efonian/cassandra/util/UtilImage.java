@@ -242,6 +242,7 @@ public final class UtilImage {
             @Override
             public BufferedImage resize(BufferedImage source, int width, int height) {
                 // TODO
+                // https://github.com/idealo/image-super-resolution
                 return source;
             }
         };
