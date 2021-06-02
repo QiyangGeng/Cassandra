@@ -7,6 +7,10 @@ public abstract class Service {
     
     // Define stages
     
+    public abstract void start();
+    
+    public abstract void stop();
+    
     protected User getClient() {
         return client;
     }
