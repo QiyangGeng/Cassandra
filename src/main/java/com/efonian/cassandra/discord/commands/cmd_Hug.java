@@ -45,8 +45,8 @@ public class cmd_Hug extends Command {
     
     private enum Hug {
         A {
-            private static final String TOP = "com/efonian/cassandra/discord/commands/hug/hug1_0.png";
-            private static final String BASE = "com/efonian/cassandra/discord/commands/hug/hug1_1.png";
+            private static final String TOP = "com/efonian/cassandra/discord/commands/hug/A/0.png";
+            private static final String BASE = "com/efonian/cassandra/discord/commands/hug/A/1.png";
             
             @Override
             ByteArrayOutputStream hug(User target) {
