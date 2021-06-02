@@ -183,9 +183,9 @@ public final class UtilImage {
                 synchronized(this) {
                     try {
                         while(source.getWidth() < width) {
-                            File input = new File("./src/ProgramData/images/input.png");
+                            File input = new File("./ProgramData/images/input.png");
                             ImageIO.write(source, "png", input);
-                            File output = new File("./src/ProgramData/images/output.png");
+                            File output = new File("./ProgramData/images/output.png");
                             Kaifu2xCli.main(new String[]{"-n0", "-s2", input.getPath(), output.getPath()});
                             source = ImageIO.read(output);
                         }
