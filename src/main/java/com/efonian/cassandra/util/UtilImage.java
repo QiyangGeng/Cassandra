@@ -123,6 +123,41 @@ public final class UtilImage {
         return new Color(r * mul, g * mul, b * mul);
     }
     
+    public static BufferedImage rotateImage(BufferedImage image, int theta) {
+        if(theta != 0) {
+            // A one-pixel border is added to help with AA at the edges
+            image = addBorder(image, 1);
+            
+            // We calculate the width and height of the new image after rotation
+            final double rads = Math.toRadians(theta);
+            final double sin = Math.abs(Math.sin(rads)), cos = Math.abs(Math.cos(rads));
+            final int w = image.getWidth(), h = image.getHeight();
+            final int newW = (int) Math.floor(w*cos + h*sin), newH = (int) Math.floor(h*cos + w*sin);
+            
+            // We rotate the image around its centre using the Graphics2D API
+            BufferedImage rotatedIcon = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g = rotatedIcon.createGraphics();
+            g.addRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
+            g.addRenderingHints(new RenderingHints(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR));
+            g.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY));
+            g.translate((newW - w)/2, (newH - h)/2);
+            g.rotate(rads, w >> 1, h >> 1);
+            g.drawRenderedImage(image, null);
+            g.dispose();
+            
+            return rotatedIcon;
+        }
+        return image;
+    }
+    
+    public static BufferedImage addBorder(BufferedImage image, int borderWidth) {
+        BufferedImage result = new BufferedImage(image.getWidth() + borderWidth * 2, image.getHeight() + borderWidth * 2, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = result.createGraphics();
+        g.drawImage(image, borderWidth, borderWidth, null);
+        g.dispose();
+        return result;
+    }
+    
     public static BufferedImage stackImages(@Nonnull BufferedImage... images) {
         return new BufferedImage(images[0].getWidth(), images[0].getHeight(), BufferedImage.TYPE_INT_ARGB) {{
             Graphics g = createGraphics();
