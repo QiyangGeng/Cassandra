@@ -219,9 +219,9 @@ public final class UtilImage {
                     try {
                         while(source.getWidth() < width) {
                             File input = new File("./ProgramData/images/input.png");
-                            ImageIO.write(source, "png", input);
                             File output = new File("./ProgramData/images/output.png");
-                            Kaifu2xCli.main(new String[]{"-n0", "-s2", input.getPath(), output.getPath()});
+                            ImageIO.write(source, "png", input);
+                            Kaifu2xCli.main(new String[] {"-n0", "-s2", input.getPath(), output.getPath()});
                             source = ImageIO.read(output);
                         }
                         
