@@ -54,7 +54,7 @@ public final class UtilImage {
     
     // Source: https://code.google.com/archive/p/game-engine-for-java/source#31
     public static BufferedImage toBufferedImage(@Nonnull Image img) {
-        if (img instanceof BufferedImage)
+        if(img instanceof BufferedImage)
             return (BufferedImage) img;
         
         // Create a buffered image with transparency
