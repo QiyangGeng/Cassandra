@@ -158,11 +158,12 @@ public final class UtilImage {
         return result;
     }
     
-    public static BufferedImage stackImages(@Nonnull BufferedImage... images) {
-        return new BufferedImage(images[0].getWidth(), images[0].getHeight(), BufferedImage.TYPE_INT_ARGB) {{
+    public static BufferedImage stackImages(int width, int height, BufferedImage... images) {
+        return new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB) {{
             Graphics g = createGraphics();
             for(BufferedImage i: images)
-                g.drawImage(i, 0, 0, null);
+                if(i != null)
+                    g.drawImage(i, 0, 0, null);
             g.dispose();
         }};
     }
