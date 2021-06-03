@@ -113,7 +113,6 @@ public class cmd_Hug extends Command {
         }
         
         private static BufferedImage resize(BufferedImage image, int targetSize) {
-            // TODO: Generate default discord avatars
             if (image.getWidth() > targetSize)
                 return UtilImage.ResizeTool.NEAREST_NEIGHBOR.resize(image, targetSize, targetSize);
             else if(image.getWidth() < targetSize)
