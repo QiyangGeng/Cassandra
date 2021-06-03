@@ -224,6 +224,7 @@ public final class UtilImage {
                             File output = File.createTempFile("output_", ".png", directory);
                             input.deleteOnExit();
                             output.deleteOnExit();
+                            
                             ImageIO.write(source, "png", input);
                             Kaifu2xCli.main(new String[] {"-n0", "-s2", input.getPath(), output.getPath()});
                             source = ImageIO.read(output);
