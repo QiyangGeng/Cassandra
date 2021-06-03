@@ -123,7 +123,7 @@ public final class UtilImage {
         return new Color(r * mul, g * mul, b * mul);
     }
     
-    public static BufferedImage rotateImage(BufferedImage image, int theta) {
+    public static BufferedImage rotateImage(BufferedImage image, double theta) {
         if(theta != 0) {
             // A one-pixel border is added to help with AA at the edges
             image = addBorder(image, 1);
@@ -218,8 +218,11 @@ public final class UtilImage {
                 synchronized(this) {
                     try {
                         while(source.getWidth() < width) {
-                            File input = new File("./ProgramData/images/input.png");
-                            File output = new File("./ProgramData/images/output.png");
+                            File directory = new File("./ProgramData/images/");
+                            File input = File.createTempFile("input_", ".png", directory);
+                            File output = File.createTempFile("output_", ".png", directory);
+                            input.deleteOnExit();
+                            output.deleteOnExit();
                             ImageIO.write(source, "png", input);
                             Kaifu2xCli.main(new String[] {"-n0", "-s2", input.getPath(), output.getPath()});
                             source = ImageIO.read(output);
