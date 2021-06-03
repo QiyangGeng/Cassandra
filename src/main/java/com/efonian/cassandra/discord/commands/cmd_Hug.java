@@ -46,12 +46,6 @@ public class cmd_Hug extends Command {
     }
     
     @Override
-    CommandAccessLevel dynamicallyAssignAccessLevel(CommandContainer cc) {
-        // later, different al to different hugger
-        return super.dynamicallyAssignAccessLevel(cc);
-    }
-    
-    @Override
     List<String> invokes() {
         return List.of("hug");
     }
