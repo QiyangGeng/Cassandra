@@ -35,15 +35,7 @@ public class cmd_Hug extends Command {
         else {
             for(String arg: cc.args) {
                 try {
-                    if(!arg.chars().allMatch(Character::isDigit))
-                        continue;
-                    
-                    User potentialTarget = cc.event.getJDA().retrieveUserById(arg).complete();
-                    
-                    if(potentialTarget == null)
-                        continue;
-                    
-                    target = potentialTarget;
+                    target = cc.event.getJDA().retrieveUserById(arg).complete();
                     break;
                 } catch(Exception ignored) {}
             }
