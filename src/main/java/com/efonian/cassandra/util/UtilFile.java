@@ -8,22 +8,17 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
-// do read, write, give options to flush, etc.; executor service for files which needs constant writing?
-// rolling writing periods
 public final class UtilFile {
     private static final Logger logger = LoggerFactory.getLogger(UtilFile.class);
     
-    
-    /**
-     * Should only really be used if too lazy to catch exceptions, reads all bytes of a file as string, no checks
-     */
     @Nullable
-    public static String readAll(String path) {
+    public static String readAll(Path path) {
         String targetFile = null;
         try {
-            targetFile = new String(Files.readAllBytes(Paths.get(path)));
+            targetFile = new String(Files.readAllBytes(path));
         } catch(IOException e) {
             logger.warn("Caught IOException when trying to read file with path: " + path);
             e.printStackTrace();
@@ -31,19 +26,14 @@ public final class UtilFile {
         return targetFile;
     }
     
-    /**
-     * Should only really be used if too lazy to catch exceptions, reads all bytes of a file as string, no checks
-     */
+    @Nullable
+    public static String readAll(String path) {
+        return readAll(Paths.get(path));
+    }
+    
     @Nullable
     public static String readAll(File file) {
-        String targetFile = null;
-        try {
-            targetFile = new String(Files.readAllBytes(file.toPath()));
-        } catch(IOException e) {
-            logger.warn("Caught IOException when trying to read file with path: " + file.getPath());
-            e.printStackTrace();
-        }
-        return targetFile;
+        return readAll(file.toPath());
     }
     
     public static void write(String path, String content) {
