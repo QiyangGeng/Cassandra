@@ -60,10 +60,11 @@ public final class DiscordBot {
                     .build();
         } catch(LoginException e) { e.printStackTrace(); }
         logger.info("Built JDA for Discord bot");
-    
+        
         createAuxiliaryListeners();
     }
     
+    // The reconnectedEvent doesn't seem to work
     private void createAuxiliaryListeners() {
         eventListenerManager
                 .registerOperator(ReadyEvent.class,
