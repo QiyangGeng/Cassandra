@@ -41,7 +41,7 @@ public class cmd_Introspection extends Command {
     
     @Override
     List<String> invokes() {
-        return List.of("introspect", "introspection");
+        return List.of("introspect", "introspection", "quine");
     }
     
     @Override
