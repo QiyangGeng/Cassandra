@@ -66,8 +66,8 @@ class cmd_Relation extends Command {
             case 1:
                 // At this point, the users list has one user. Our goal is to populate the list with at least two
                 // users, where we have the author and the bot as fallback in that order. Thus:
-                // if the list is a user that is not the author, we add the author to the list
-                // if the list is a user that is the author, we add the bot to the list
+                //  - if the list is a user that is not the author, we add the author to the list
+                //  - if the list is a user that is the author, we add the bot to the list
                 if(users.contains(cc.event.getAuthor()))
                     users.add(getSelfUser());
                 else
@@ -76,27 +76,32 @@ class cmd_Relation extends Command {
                 break;
         }
     
+        // Add relevant users to the graph as vertices
         users.forEach(u -> graph.addVertex(new ColouredVertex<>(u.getName(), userAvatarAverageColour(u))));
         
         cc.event.getJDA().getGuilds().forEach(guild -> {
             List<User> guildUsers = guild.findMembers(member -> users.contains(member.getUser())).get()
                     .stream().map(Member::getUser).collect(Collectors.toList());
             
+            // We only need to add additional edges if there are at least two relevant users in the guild
             if(guildUsers.size() < 2)
                 return;
             
+            // We create a new map with the sublist of relevant users present in this guild
             Graph<ColouredVertex<String>, RelationshipEdge> guildGraph = new Multigraph<>(new Supplier<>() {
                 private int index = 0;
     
                 @Override
                 public ColouredVertex<String> get() {
-                    User user = guildUsers.get(index++);
+                    User user = guildUsers.get(index++); // Sublist of user present in this guild
                     return new ColouredVertex<>(user.getName(), userAvatarAverageColour(user));
                 }
             }, () -> new RelationshipEdge(guild.getName()), false);
             
+            // We generate a complete graph, drawing an edge between all relevant users in this guild
             UtilGraph.generateCompleteGraph(guildGraph, guildUsers.size());
             
+            // We add the edges to the main graph by combining the two graphs
             Graphs.addGraph(graph, guildGraph);
         });
         
