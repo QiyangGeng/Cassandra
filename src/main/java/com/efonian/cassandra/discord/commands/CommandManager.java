@@ -1,5 +1,6 @@
 package com.efonian.cassandra.discord.commands;
 
+import com.efonian.cassandra.discord.commands.annotation.Cooldown;
 import com.efonian.cassandra.discord.event.EventListenerManager;
 import com.efonian.cassandra.misc.DaemonThreadFactory;
 import com.efonian.cassandra.util.UtilRuntime;
@@ -23,6 +24,7 @@ import java.util.concurrent.*;
 @Component
 public final class CommandManager {
     private static final Logger logger = LoggerFactory.getLogger(CommandManager.class);
+    private static final ThreadFactory DAEMON_THREAD_FACTORY = new DaemonThreadFactory();
     
     private static final String PREFIX = "!";
     
@@ -31,9 +33,13 @@ public final class CommandManager {
     private final TimeUnit defaultCommandTimeUnit = TimeUnit.SECONDS;
     
     private final Map<List<String>, Command> registeredCommands = new ConcurrentHashMap<>();
-    private final ExecutorService executors = Executors.newFixedThreadPool(4, new DaemonThreadFactory());
+    private final ExecutorService executors = Executors.newFixedThreadPool(4, DAEMON_THREAD_FACTORY);
     
     private EventListenerManager eventListenerManager;
+    
+    private final ScheduledExecutorService cooldownRemovalService =
+            Executors.newSingleThreadScheduledExecutor(DAEMON_THREAD_FACTORY);
+    private final ConcurrentHashMap<Long, ScheduledFuture<?>> usersOnCooldown = new ConcurrentHashMap<>();
     
     
     /**
@@ -61,11 +67,10 @@ public final class CommandManager {
      * @param event     The {@code MessageReceivedEvent}
      */
     private void handleMessageInput(MessageReceivedEvent event) {
-        // remember to remove if too much
         if(event.getAuthor().getIdLong() != event.getJDA().getSelfUser().getIdLong())
             logMessage(event);
         
-        // Prefix check
+        // Command prefix check
         if(!event.getMessage().getContentRaw().startsWith(PREFIX))
             return;
         
@@ -90,8 +95,12 @@ public final class CommandManager {
         logger.info(String.format(
                 "Received message from (%s) in %s%s: \"%s\"",
                 event.getAuthor().getName(),
-                event.getChannelType().isGuild() ? "guild (" + event.getGuild().getName() + "), channel (" + event.getChannel().getName() + ")" : "private channel",
-                event.getMessage().getAttachments().isEmpty() ? "" : " with " + event.getMessage().getAttachments().size() + "attachments",
+                event.getChannelType().isGuild() ?
+                        "guild (" + event.getGuild().getName() + "), channel (" + event.getChannel().getName() + ")" :
+                        "private channel",
+                event.getMessage().getAttachments().isEmpty() ?
+                        "" :
+                        " with " + event.getMessage().getAttachments().size() + "attachments",
                 event.getMessage().getContentRaw()));
     }
     
@@ -130,15 +139,38 @@ public final class CommandManager {
     
         CompletableFuture
                 .runAsync(() -> cmd.execute(cc), executors)
-                // commented out since the default value for the below method is precomputed, uncomment if the API ever gives a lazy option
-//                    .completeOnTimeout(handleTimeout(cmdCopy, cc), defaultCommandLifetime, defaultCommandTimeUnit)
                 .orTimeout(defaultCommandLifetime, defaultCommandTimeUnit)
                 .thenAcceptAsync(result -> handleCommandFirstExecutionComplete(cmd, cc))
                 .exceptionallyAsync(throwable -> handleCommandException(throwable.getCause(), cmd, cc));
+        
+        // TODO: test cooldown system
+        putUserOnCooldown(cc.event.getAuthor().getIdLong(), cmd);
+    }
+    
+    private void putUserOnCooldown(long user, Command cmd) {
+        Class<? extends Command> cla = cmd.getClass();
+        
+        if(!cla.isAnnotationPresent(Cooldown.class))
+            return;
+        
+        if(CommandAccessManager.checkUserAccessLevel(user, CommandAccessLevel.MODERATOR))
+            return;
+        
+        int cooldown = cla.getAnnotation(Cooldown.class).cooldown();
+        if(cooldown > 0)
+            usersOnCooldown.put(user,
+                    cooldownRemovalService.schedule(() -> usersOnCooldown.remove(user), cooldown, TimeUnit.SECONDS));
+    }
+    
+    private void putUserOffCooldown(long user) {
+        ScheduledFuture<?> task = usersOnCooldown.remove(user);
+        if(task != null)
+            task.cancel(false);
     }
     
     private void handleCommandFirstExecutionComplete(Command cmd, CommandContainer cc) {
-        logger.info(String.format("Completed command %s for (%s)", cmd.getClass().getSimpleName(), cc.event.getAuthor().getName()));
+        logger.info(String.format("Completed command %s for (%s)",
+                cmd.getClass().getSimpleName(), cc.event.getAuthor().getName()));
     }
     
     private void handleTimeout(Command cmd, CommandContainer cc) {
@@ -146,21 +178,24 @@ public final class CommandManager {
                 cmd.getClass().getSimpleName(),
                 cc.event.getAuthor().getName()
         ));
-        cc.event.getChannel().sendMessage(String.format("%s Timed out on task", cc.event.getAuthor().getAsMention())).queue();
+        cc.event.getChannel().sendMessage(String.format("%s timed out on task",
+                cc.event.getAuthor().getAsMention())).queue();
     }
     
     private Void handleCommandException(Throwable throwable, Command cmd, CommandContainer cc) {
+        putUserOffCooldown(cc.event.getAuthor().getIdLong());
+        
         if(throwable.getClass().equals(RuntimeException.class)) {
             if(throwable.getCause() != null)
                 throwable = throwable.getCause();
         }
         
-        // Special cases
-        // see comment in the startTask method
         if(throwable instanceof TimeoutException) {
             handleTimeout(cmd, cc);
             return null;
-        } else if(throwable instanceof IllegalArgumentException) {
+        }
+        
+        if(throwable instanceof IllegalArgumentException) {
             Command.sendHelpMessage(cc.event.getChannel(), cmd);
             logger.info(String.format("Illegal arguments for command %s from (%s)",
                     cmd.getClass().getSimpleName(),
@@ -171,7 +206,8 @@ public final class CommandManager {
         }
         
         // General exceptions
-        cc.event.getChannel().sendMessage(String.format("%s Unable to complete task", cc.event.getAuthor().getAsMention())).queue();
+        cc.event.getChannel().sendMessage(String.format("%s Unable to complete task",
+                cc.event.getAuthor().getAsMention())).queue();
         logger.info(String.format("Failed completing command %s for (%s) with exception %s",
                 cmd.getClass().getSimpleName(),
                 cc.event.getAuthor().getName(),
@@ -198,6 +234,7 @@ public final class CommandManager {
     @PreDestroy
     private void shutdown() {
         UtilRuntime.shutDownExecutorService(executors);
+        UtilRuntime.shutDownExecutorService(cooldownRemovalService);
     }
     
     /**

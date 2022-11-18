@@ -1,5 +1,6 @@
 package com.efonian.cassandra.discord.commands;
 
+import com.efonian.cassandra.discord.commands.annotation.Cooldown;
 import com.efonian.cassandra.discord.commands.annotation.DeclareCommandAccessLevel;
 import com.efonian.cassandra.util.UtilImage;
 import net.dv8tion.jda.api.entities.User;
@@ -10,8 +11,10 @@ import org.springframework.stereotype.Component;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -20,26 +23,27 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
+@Cooldown(cooldown = 60)
 @DeclareCommandAccessLevel
 public class cmd_Hug extends Command {
-    private static final Map<String, Hug> availableHugger = new ConcurrentHashMap<>(Arrays
+    private static final File CACHE_DIRECTORY =
+            Paths.get("./src/main/resources/com/efonian/cassandra/discord/cache").toFile();
+    private static final Map<String, Hug> AVAILABLE_HUGGER = new ConcurrentHashMap<>(Arrays
             .stream(Hug.values()).collect(Collectors.toMap(Enum::name, Function.identity())));
     
     @Override
     void execute(CommandContainer cc) {
         User target = cc.event.getAuthor();
-        Hug hugger = cc.args.isEmpty() ? Hug.AHR : availableHugger.getOrDefault(cc.args.get(0).toUpperCase(), Hug.AHR);
+        Hug hugger = cc.args.isEmpty() ? Hug.AHR : AVAILABLE_HUGGER.getOrDefault(cc.args.get(0).toUpperCase(), Hug.AHR);
         
         if(cc.event.getMessage().getMentionedUsers().size() > 0)
             target = cc.event.getMessage().getMentionedUsers().get(0);
-        else {
-            for(String arg: cc.args) {
+        else
+            for(String arg: cc.args)
                 try {
                     target = cc.event.getJDA().retrieveUserById(arg).complete();
                     break;
                 } catch(Exception ignored) {}
-            }
-        }
         
         cc.event.getChannel().sendMessage("Slowly approaching " + target.getName() + "...").queue();
         cc.event.getChannel().sendFile(hugger.hug(target), hugger.name() + "_hugging_" + target.getName() + ".png").queue();
@@ -52,7 +56,7 @@ public class cmd_Hug extends Command {
     
     @Override
     String description() {
-        return "have a hug!";
+        return "{hugger} {target userID or as mention}: have a hug!";
     }
     
     private enum Hug {
@@ -99,6 +103,7 @@ public class cmd_Hug extends Command {
         }
         
         private static BufferedImage resize(BufferedImage image, int targetSize) {
+            // refactor
             if (image.getWidth() > targetSize)
                 return UtilImage.ResizeTool.NEAREST_NEIGHBOR.resize(image, targetSize, targetSize);
             else if(image.getWidth() < targetSize)
@@ -108,20 +113,22 @@ public class cmd_Hug extends Command {
     
         @NotNull
         private BufferedImage getTop() throws IOException {
+            if(top != null)
+                return top;
             URL url = cmd_Hug.class.getClassLoader().getResource(pathTop);
-            if(url == null)
-                throw new IOException("Cannot find top image for hug " + this.name());
-            return top == null ? (top = ImageIO.read(url)) : top;
+            if(url == null) throw new IOException("Cannot find top image for hug " + this.name());
+            return top = ImageIO.read(url);
         }
         
         @Nullable
         private BufferedImage getBase() throws IOException {
             if(pathBase == null)
                 return null;
+            if(base != null)
+                return base;
             URL url = cmd_Hug.class.getClassLoader().getResource(pathBase);
-            if(url == null)
-                throw new IOException("Cannot find base image for hug " + this.name());
-            return base == null ? (base = ImageIO.read(url)) : base;
+            if(url == null) throw new IOException("Cannot find base image for hug " + this.name());
+            return base = ImageIO.read(url);
         }
         
         Hug(String pathTop, String pathBase, double theta, int targetSize, int xOffset, int yOffset) {
