@@ -2,7 +2,8 @@
 This (very much still work in progress) discord bot uses the [Spring Framework](https://spring.io/),
 and communicates with Discord using the popular event-driven API [JDA](https://github.com/DV8FromTheWorld/JDA).
 
-This is a toy project, and there is no plan for the bot to become publicly available. However, the code is all here...
+This is a toy project to learn various different topics, and is not very good at being a discord bot. 
+There is also no plan for the bot to become publicly available.
 
 ## Contents
 - [Summary](#summary)
