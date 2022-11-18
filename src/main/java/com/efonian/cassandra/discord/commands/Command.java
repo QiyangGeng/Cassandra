@@ -96,6 +96,7 @@ abstract class Command {
         }}.build()).queue();
     }
     
+    // TODO: consider moving these to somewhere else
     static void sendImage(MessageChannel channel, String message, BufferedImage image, String name, String formatName) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         try {

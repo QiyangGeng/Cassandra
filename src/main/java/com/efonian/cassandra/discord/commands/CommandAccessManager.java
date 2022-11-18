@@ -72,6 +72,7 @@ public final class CommandAccessManager {
                 .collect(Collectors.toList());
     }
     
+    // TODO: refactor the two methods below
     private static boolean findAndCompareAccessLevelIgnoreDynamic(CommandContainer cc, CommandAccessLevelContainer calc) {
         return calc.getAccessLevel(cc.event.isFromGuild())
                 .compareTo(findUserAccessLevel(cc.event.getAuthor().getIdLong())) <= 0;
@@ -89,6 +90,10 @@ public final class CommandAccessManager {
     
     static CommandAccessLevel findUserAccessLevel(long userId) {
         return userAccessLevelRecords.getOrDefault(userId, CommandAccessLevel.REGULAR);
+    }
+    
+    static boolean checkUserAccessLevel(long userId, CommandAccessLevel cal) {
+        return cal.compareTo(findUserAccessLevel(userId)) <= 0;
     }
     
     // add method to link access level to role
