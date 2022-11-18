@@ -1,4 +1,4 @@
-package com.efonian.cassandra.discord.services.persistent;
+package com.efonian.cassandra.discord.services;
 
 import com.efonian.cassandra.discord.DiscordBot;
 import com.efonian.cassandra.discord.event.EventListenerManager;
