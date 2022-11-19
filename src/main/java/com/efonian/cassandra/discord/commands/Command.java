@@ -28,8 +28,8 @@ import java.util.List;
 abstract class Command {
     private static final Logger logger = LoggerFactory.getLogger(Command.class);
     
-    private CommandManager cmdManager;
-    private CommandAccessManager cmdAccessManager;
+    protected CommandManager cmdManager;
+    protected CommandAccessManager cmdAccessManager;
     
     /**
      * Sets up each command and register it with the Command manager, an alternative to autowiring such as done in the
@@ -49,9 +49,7 @@ abstract class Command {
      * <c>@PostConstruct</c> method. Override if needed to set up stuff, such as opening files, etc. While Spring
      * seems to support multiples of such methods, it is probably best not to rely on that.
      */
-    protected void setup() {
-    
-    }
+    protected void setup() {}
     
     /**
      * A method to mirror the <c>setup</c> method for shutting down, override if needed
@@ -78,13 +76,6 @@ abstract class Command {
      * @return a description of what this command does
      */
     abstract String description();
-    
-    /**
-     * Allows the command to dynamically assign itself an access level based on the context of the event.
-     */
-    CommandAccessLevel dynamicallyAssignAccessLevel(CommandContainer cc) {
-        throw new RuntimeException("Called dynamic Assign method of Command class");
-    }
     
     static void sendHelpMessage(MessageChannel channel, Command command) {
         channel.sendMessage(new EmbedBuilder() {{
