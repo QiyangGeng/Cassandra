@@ -34,7 +34,7 @@ public class cmd_ValidateInvokes extends Command {
             cc.event.getChannel().sendMessage("Found duplicate invokes: " + grammaticallyJoin(dupes)).queue();
         }
         else
-            cc.event.getChannel().sendMessage("No duplicate invokes were found").queue();
+            cc.event.getChannel().sendMessage("No duplicate invokes were found.").queue();
     }
     
     private List<String> concInvokesAndCmds(List<String> invokes, Map<List<String>, Command> commands) {
@@ -72,7 +72,7 @@ public class cmd_ValidateInvokes extends Command {
                     .queue();
         }
         else
-            cc.event.getChannel().sendMessage("No duplicate invokes were found").queue();
+            cc.event.getChannel().sendMessage("No invokes with illegal characters (non alphanumeric) were found.").queue();
     }
     
     private String grammaticallyJoin(List<String> strings) {
