@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * A class for some math stuff with the long class
  */
 public class UtilMathLong {
-    // The square roots of these primes are less than 5, which causes some problem with the primality test used
+    // The square roots of these primes are ~5, which causes some problem with the primality test used
     public final static List<Long> SMALL_PRIMES = List.of(2L, 3L, 5L, 7L, 11L, 13L, 17L, 19L, 23L, 29L);
     
     private static final CacheLoader<Long, List<Long>> pFPRLoader = new CacheLoader<>() {
