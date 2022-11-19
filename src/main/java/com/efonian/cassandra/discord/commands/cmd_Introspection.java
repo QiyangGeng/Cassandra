@@ -19,20 +19,24 @@ public class cmd_Introspection extends Command {
         // TODO: check for non-exact matches as well
         // https://stackoverflow.com/questions/5694385/getting-the-filenames-of-all-files-in-a-folder
         
-        String potentialCommandName = cc.args.get(0).toLowerCase();
-        if(potentialCommandName.startsWith("cmd_")) {
-            potentialCommandName = potentialCommandName.substring(0, 4)
-                    + potentialCommandName.substring(4, 5).toUpperCase()
-                    + potentialCommandName.substring(5);
+        String cmdName = cc.args.get(0).toLowerCase();
+        Command cmd = cmdManager.findCommandForUser(cc.event.isFromGuild(), cc.event.getAuthor(), cmdName);
+        
+        if(cmd != null) {
+            cmdName = cmd.getClass().getSimpleName();
+        } else if(cmdName.startsWith("cmd_")) {
+            cmdName = cmdName.substring(0, 4)
+                    + cmdName.substring(4, 5).toUpperCase()
+                    + cmdName.substring(5);
         } else {
-            potentialCommandName = potentialCommandName.substring(0, 1).toUpperCase() + potentialCommandName.substring(1);
-            potentialCommandName = "cmd_" + potentialCommandName;
+            cmdName = cmdName.substring(0, 1).toUpperCase() + cmdName.substring(1);
+            cmdName = "cmd_" + cmdName;
         }
         
-        Path directory = Paths.get("./src/main/java/com/efonian/cassandra/discord/commands/" + potentialCommandName + ".java");
+        Path directory = Paths.get("./src/main/java/com/efonian/cassandra/discord/commands/" + cmdName + ".java");
         
         if(!Files.exists(directory)) {
-            cc.event.getChannel().sendMessage("Cannot find command " + potentialCommandName).queue();
+            cc.event.getChannel().sendMessage("Cannot find command " + cmdName).queue();
             return;
         }
         
