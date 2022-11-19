@@ -4,6 +4,7 @@ import com.efonian.cassandra.discord.commands.annotation.Cooldown;
 import com.efonian.cassandra.discord.event.EventListenerManager;
 import com.efonian.cassandra.misc.DaemonThreadFactory;
 import com.efonian.cassandra.util.UtilRuntime;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,15 +111,35 @@ public final class CommandManager {
      */
     private boolean validateRequest(CommandContainer cc, Command command) {
         // Null check
-        if(command == null)
+        if(command == null) {
+            cc.event.getChannel().sendMessage(
+                    cc.event.getAuthor().getAsMention() + " Command not found. ").queue();
             return false;
+        }
         
         // Permission check
-        return CommandAccessManager.hasPermission(cc, command).getOrElseGet((msg) -> {
+        return CommandAccessManager.hasPermission(cc.event.isFromGuild(), cc.event.getAuthor(), command)
+                .getOrElseGet((msg) -> {
             cc.event.getChannel().sendMessage(
                     cc.event.getAuthor().getAsMention() + " Unable to request command: " + msg).queue();
             return false;
         });
+    }
+    
+    /**
+     * Finds a command given a user using their permission level
+     * @return The command, if the invoke matches with any, and the user has permission for it, else {@code null}
+     */
+    Command findCommandForUser(boolean isFromGuild, User user, String invoke) {
+        Command foundCommand = findCommand(invoke);
+        
+        if(foundCommand == null)
+            return null;
+        
+        if(CommandAccessManager.hasPermissionSimple(isFromGuild, user, foundCommand))
+            return foundCommand;
+        
+        return null;
     }
     
     /**
