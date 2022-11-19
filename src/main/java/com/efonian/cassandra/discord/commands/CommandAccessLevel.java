@@ -10,7 +10,6 @@ public enum CommandAccessLevel {
     TRUSTED,
     MODERATOR,
     ADMIN,
-    DYNAMIC,
     FULL,
     NULL
 }

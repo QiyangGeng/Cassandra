@@ -9,16 +9,11 @@ import java.util.List;
 // TODO: non-full AL has access to info, o/w everything
 @Disabled
 @Component
-@DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.DYNAMIC)
+@DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.ADMIN)
 class cmd_Crafty extends Command {
     @Override
     void execute(CommandContainer cc) {
     
-    }
-    
-    @Override
-    CommandAccessLevel dynamicallyAssignAccessLevel(CommandContainer cc) {
-        return super.dynamicallyAssignAccessLevel(cc);
     }
     
     @Override
