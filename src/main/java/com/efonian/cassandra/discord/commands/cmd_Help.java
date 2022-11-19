@@ -29,9 +29,15 @@ class cmd_Help extends Command {
             setThumbnail(DiscordBot.getSelfAvatar());
             setDescription("Your access level: " + StringUtils.capitalize(userAL.name().toLowerCase()));
             for(Command cmd: availableCommands)
-                addField(cmd.getClass().getSimpleName().substring(4), codeBlockWrap(cmd.description()), false);
+                addField(
+                        cmd.getClass().getSimpleName().substring(4),
+                        "Available invokes: " + codeBlockWrap(String.join(", ", cmd.invokes())) +
+                                "Description: \n" +
+                                codeBlockWrap(cmd.description()),
+                        false);
             setAuthor(getSelfName());
             setTimestamp(Instant.now());
+            setColor(getSelfAvatarAverageColour());
         }}.build()).queue();
     }
     
