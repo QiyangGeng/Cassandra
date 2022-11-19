@@ -217,6 +217,11 @@ public final class CommandManager {
         }
         
         if(throwable instanceof IllegalArgumentException) {
+            if(!throwable.getMessage().equals("")) {
+                cc.event.getChannel().sendMessage(cmd.toString().substring(4) + ": " +
+                        throwable.getMessage()).queue();
+            }
+            
             Command.sendHelpMessage(cc.event.getChannel(), cmd);
             logger.info(String.format("Illegal arguments for command %s from (%s)",
                     cmd.getClass().getSimpleName(),
