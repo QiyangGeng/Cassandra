@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
  * A class for some math stuff with the long class
  */
 public class UtilMathLong {
+    // The square roots of these primes are less than 5, which causes some problem with the primality test used
     public final static List<Long> SMALL_PRIMES = List.of(2L, 3L, 5L, 7L, 11L, 13L, 17L, 19L, 23L, 29L);
     
     private static final CacheLoader<Long, List<Long>> pFPRLoader = new CacheLoader<>() {
@@ -33,12 +34,10 @@ public class UtilMathLong {
      * @return a list of the prime factors of num
      */
     private static List<Long> primeFactorizationPollardRhoPrivate(long num) {
-        if(num <= 1)
-            return List.of();
-        if(isPrime(num))
-            return List.of(num);
-        
         List<Long> primeFactors = new ArrayList<>();
+    
+        if(num <= 1)
+            return primeFactors;
         
         while(num % 2 == 0) {
             primeFactors.add(2L);
@@ -64,7 +63,6 @@ public class UtilMathLong {
                 y = (y * y + c) % num;
                 y = (y * y + c) % num;
                 d = gcd(abs(x - y), num);
-                long z = 0;
             }
         } while(d == num);
         
@@ -107,6 +105,7 @@ public class UtilMathLong {
         return Math.log(num);
     }
     
+    // Not tested
     public static boolean isProbablePrimeFermat(long num, long k) {
         if(SMALL_PRIMES.contains(num))
             return true;
@@ -125,6 +124,7 @@ public class UtilMathLong {
     /**
      * Miller-Rabin test, O(k*log^3(num))
      */
+    // Not tested
     public static boolean isProbablePrimeMillerRabin(long num, long k) {
         if(SMALL_PRIMES.contains(num))
             return true;
@@ -156,6 +156,7 @@ public class UtilMathLong {
         return true;
     }
     
+    // TODO: implement (does Java optimize?)
     public static long modExp(long a, long b, long c) {
         return a ^ b % c;
     }
