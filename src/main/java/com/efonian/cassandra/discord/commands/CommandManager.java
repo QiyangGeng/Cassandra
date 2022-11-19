@@ -147,7 +147,7 @@ public final class CommandManager {
      * @param call  The potential invoke
      * @return      The command, if the invoke matches with any, else {@code null}
      */
-    private Command findCommand(String call) {
+    Command findCommand(String call) {
         for(List<String> validInvokes : registeredCommands.keySet()) {
             if(validInvokes.stream().anyMatch(invoke -> invoke.equalsIgnoreCase(call)))
                 return registeredCommands.get(validInvokes);
@@ -265,5 +265,9 @@ public final class CommandManager {
     @Autowired
     private void setEventListenerManager(EventListenerManager eventListenerManager) {
         this.eventListenerManager = eventListenerManager;
+    }
+    
+    Map<List<String>, Command> getRegisteredCommands() {
+        return registeredCommands;
     }
 }

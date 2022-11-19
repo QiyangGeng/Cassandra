@@ -177,4 +177,9 @@ abstract class Command {
     private void setCmdAccessManager(CommandAccessManager manager) {
         this.cmdAccessManager = manager;
     }
+    
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName();
+    }
 }
