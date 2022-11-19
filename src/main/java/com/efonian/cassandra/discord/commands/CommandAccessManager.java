@@ -9,6 +9,7 @@ import com.efonian.cassandra.util.UtilRuntime;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import io.vavr.control.Either;
+import net.dv8tion.jda.api.entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -32,26 +33,27 @@ public final class CommandAccessManager {
     private static Map<Long, CommandAccessLevel> userAccessLevelRecords = new ConcurrentHashMap<>();
     
     
+    
     /**
      * @return string left of error message and (implied) denied permission check, or right slight fail/pass
      */
-    static Either<String, Boolean> hasPermission(CommandContainer cc, Command command) {
+    static Either<String, Boolean> hasPermission(boolean isFromGuild, User user, Command command) {
         CommandAccessLevelContainer calc = commandAccessLevels.get(command);
-    
+        
         if(calc == null)                                                return Either.left("command access level is not registered");
         if(calc.guildAccessLevel.equals(CommandAccessLevel.NULL))       return Either.left("command guild access level is registered as null");
         if(calc.privateAccessLevel.equals(CommandAccessLevel.NULL))     return Either.left("command private access level is registered as null");
-        if(!cc.event.isFromGuild() && calc.guildOnly)                   return Either.left("this command can only be used in servers");
-        if(cc.event.getAuthor().isBot() && !calc.botFriendly)           return Either.right(false);
-        return Either.right(findAndCompareAccessLevel(cc, command, calc));
+        if(isFromGuild && calc.guildOnly)                               return Either.left("this command can only be used in servers");
+        if(user.isBot() && !calc.botFriendly)                           return Either.right(false);
+        return Either.right(findAndCompareAccessLevel(isFromGuild, user, calc));
     }
     
     /**
      * Permission check, but the error messages are ignored
      * @return      true if the author of the event have permission to use the command, false otherwise
      */
-    static boolean hasPermissionSimple(CommandContainer cc, Command command) {
-        return CommandAccessManager.hasPermission(cc, command).getOrElseGet((msg) -> false);
+    static boolean hasPermissionSimple(boolean isFromGuild, User user, Command command) {
+        return CommandAccessManager.hasPermission(isFromGuild, user, command).getOrElseGet((msg) -> false);
     }
     
     static boolean canRequestMulti(long userId) {
@@ -68,24 +70,15 @@ public final class CommandAccessManager {
      */
     static List<Command> getAvailableCommands(CommandContainer cc) {
         return commandAccessLevels.keySet().stream()
-                .filter(cmd -> findAndCompareAccessLevelIgnoreDynamic(cc, commandAccessLevels.get(cmd)))
+                .filter(cmd -> findAndCompareAccessLevel(
+                        cc.event.isFromGuild(), cc.event.getAuthor(),
+                        commandAccessLevels.get(cmd)))
                 .collect(Collectors.toList());
     }
     
-    // TODO: refactor the two methods below
-    private static boolean findAndCompareAccessLevelIgnoreDynamic(CommandContainer cc, CommandAccessLevelContainer calc) {
-        return calc.getAccessLevel(cc.event.isFromGuild())
-                .compareTo(findUserAccessLevel(cc.event.getAuthor().getIdLong())) <= 0;
-    }
-    
-    private static boolean findAndCompareAccessLevel(CommandContainer cc, Command command, CommandAccessLevelContainer calc) {
-        CommandAccessLevel commandAL = calc.getAccessLevel(cc.event.isFromGuild());
-        
-        // handle dynamic access level
-        if(commandAL.equals(CommandAccessLevel.DYNAMIC))
-            commandAL = command.dynamicallyAssignAccessLevel(cc);
-        
-        return commandAL.compareTo(findUserAccessLevel(cc.event.getAuthor().getIdLong())) <= 0;
+    private static boolean findAndCompareAccessLevel(boolean isFromGuild, User user, CommandAccessLevelContainer calc) {
+        return calc.getAccessLevel(isFromGuild)
+                .compareTo(findUserAccessLevel(user.getIdLong())) <= 0;
     }
     
     static CommandAccessLevel findUserAccessLevel(long userId) {
