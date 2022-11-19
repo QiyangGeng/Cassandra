@@ -144,11 +144,12 @@ public final class CommandAccessManager {
     
         if(!cla.isAnnotationPresent(DeclareCommandAccessLevel.class)) {
             logger.warn(String.format("Command %s did not declare command access level", cla.getName()));
-            commandAccessLevels.put(cmd, new CommandAccessLevelContainer(CommandAccessLevel.NULL, botFriendly, guildOnly));
+            commandAccessLevels.put(cmd, new CommandAccessLevelContainer(CommandAccessLevel.ADMIN, botFriendly, guildOnly));
             return;
         }
-    
+        
         DeclareCommandAccessLevel ann = cla.getAnnotation(DeclareCommandAccessLevel.class);
+        
         if(ann.accessLevel() != CommandAccessLevel.NULL) {
             commandAccessLevels.put(cmd, new CommandAccessLevelContainer(ann.accessLevel(), botFriendly, guildOnly));
             return;
