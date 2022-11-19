@@ -1,12 +1,17 @@
 # Cassandra
-This (very much still work in progress) discord bot uses the [Spring Framework](https://spring.io/),
+This application includes a Discord bot which uses the [Spring Framework](https://spring.io/),
 and communicates with Discord using the popular event-driven API [JDA](https://github.com/DV8FromTheWorld/JDA).
 
-This is a toy project to learn various different topics, and is not very good at being a discord bot, since I'm most
-just doing my own things, and there is not much designing going on. 
-There is also no plan for the bot to become publicly available.
+This is a personal toy project to learn various different topics, and is not very good at being a discord bot. 
+I'm mostly just doing my own things, and there is not much UX designing going on.
+There is also no plan for the bot to become publicly available. However, if you can see this code, you can always fork
+it and supply your own token.
 
-Progress is interspersed; currently (November 2022) planning on migrating and updating after JDA 5.0 is out of alpha.
+Progress is interspersed. I wrote all this because past me is awesome and takes care of future me. 
+Currently, I am planning on migrating and updating after JDA 5.0 is out of alpha.
+
+If you are me, or have access to my Discord account for some reason, you can invite the bot using this 
+[link](https://discord.com/api/oauth2/authorize?client_id=836993452113264640&permissions=8&scope=bot).
 
 ## Contents
 - [Summary](#summary)
@@ -19,19 +24,19 @@ Progress is interspersed; currently (November 2022) planning on migrating and up
 - [Change Log](#change-log)
 
 ## Summary
-The purposes of this project is applying OO concepts, learning relevant design patterns, exploring various interesting
-APIs, and learning about things using Discord as an interface. As such,
-many aspects of this program can be seen as "over-engineered" since concepts are not applied based on necessity,
-but on whether I would like to try said concept.
+The intention of creating this project is applying object-oriented programming concepts, 
+learning relevant design patterns, and exploring various interesting APIs. As such,
+many aspects of this program might not be seen as "well-designed" since it is created with the programmer (me) as the
+main stakeholder, not users.
 
-The learning goal of this project naturally evolved over time. At first, this project was a refactoring of one of my
+The purpose of this project naturally evolved over time. At first, this project was a refactoring of one of my
 older projects into the Spring framework. As the project started to take shape, however, I began to see more and more
-things I could do very easily with this program due to its extensibility, and I would start to
-implement apparently random things as needs arise.
+things I could do very easily with this program due to its modularity and extensibility, and I would start to
+implement random things as needs arise.
 
-For example, one night, I found myself wanting to call one of my friends 'dum', but with the message in encoded into
-a QR code. The need for a QR code decoder followed thereof. This
-lead to the command class `cmd_QRCode`, which depends on the `UtilQRCode` class to interface with the QR code
+For example, one night, I found myself wanting to call one of my friends 'dum', but using a QR code. 
+The need for a QR code decoder followed thereof. 
+This lead to the command class `cmd_QRCode`, which depends on the `UtilQRCode` class to interface with the QR code
 API. All in all, they account for around a hundred lines of code, and required no modification of any other files.
 Furthermore, since I had ~~copied the provided demo to~~ implemented the `UtilQRCode` class, it was also trivial to create
 an additional class, `QRCodeAutoDecoder`, which tries to decode any image received as a QR code. It only took around two
@@ -58,7 +63,7 @@ and pass the event to the appropriate listener, should there be any.
 The listener can then choose to keep listening, or stop listening.
 
 The `EventListenerManager` class has a public method for registering a listener.
-The parameters involve the type of event, and a function which consumes an instance of said event
+The parameters involve the type of event, and a function which consumes instances of that event
 (implemented using a functional interface called `EventOperator`),
 and returns a boolean to indicate whether the listener wishes to keep listening for said events.
 If not, it is removed from the listener map and left to be garbage collected.
@@ -72,9 +77,11 @@ It will execute the command with an executor if the request is valid. If the com
 the manager to await callback.
 
 #### Command Class
-The commands take advantage of the Spring framework, and allows for initialization, setup, and registration all by
-just extending the `Command` class and declaring itself a bean. This means that no class is dependent on any command, 
-i.e. no class needs to mention the command in their code, i.e. no other files need to be edited.
+The commands take advantage of the Spring framework, and allows for initialization, setup, and registration of concrete 
+child by just extending the `Command` class and declaring itself a bean. 
+This means that no class is necessarily dependent on any command, 
+i.e. no class needs to mention the command in their code, i.e. no other files need to be edited. This leads to great
+modularity and exten
 The abstract class itself contains some standard methods, such as `execute`, which executes the command,
 `invokes`, which returns a list of invokes the command responds to, and `description`, which returns a description of
 the command.
@@ -96,8 +103,6 @@ A RBAC system can be built on top by allowing linkage of a user role to a specif
 system will allow users with sufficient access to give access to others. The Biba model can be used to ensure integrity of
 the system, so a user can only assign (write) access levels that is below their access level.
 
-At the moment, a lot of this is still work in progress.
-
 #### Annotations
 Some annotations aid in the control of commands. Since commands do not need to be registered manually, there needs to be
 a way for a command class to exist without being registered, for purposes such as testing. This is accomplished by the
@@ -106,6 +111,14 @@ a way for a command class to exist without being registered, for purposes such a
 levels for private channel and guild channel separately, which is useful for commands such as the print command. It will
 cause no harm for the bot to wipe its own record from a private channel; however, wiping the message history of everyone
 on a guild channel will mostly likely prove disastrous.
+
+#### Debug Commands
+There are a few commands with debug purposes. 
+- `cmd_Disabled` is a disabled command, which is used to test the disabling system;
+- `cmd_Exception` throws a `RunTimeException`, which can be used for testing command exception handling;
+- `cmd_Introspection` sends the file of a command, given the command name or invoke;
+- `cmd_Ping` is a classic Discord command for testing response;
+- `cmd_Timeout` hangs indefinitely, eventually leading to a timeout event.
 
 ### Console
 A basic CLI is available for the program. At the moment, the only thing implemented is starting the proper exit of the 
@@ -128,6 +141,8 @@ application.
 - Implement console
 - Implement UtilMessage for Discord Bot
 - Implement more fully UtilFile
+- Radio
+- Bus and flight data
 
 ### Long term (mostly speculative):
 - Interpreter with discord gui elements and some capabilities
@@ -155,4 +170,4 @@ we will see.
 
 ### Making the repo public (2022/11/17)
 
-I decided to make the repo public, so some people can see my code.
+I decided to make the repo public, so some people can see my code. Don't judge too hard.
