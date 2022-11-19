@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 @Component
-@DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.FULL)
+@DeclareCommandAccessLevel(accessLevel = CommandAccessLevel.REGULAR)
 public class cmd_Introspection extends Command {
     @Override
     void execute(CommandContainer cc) {
