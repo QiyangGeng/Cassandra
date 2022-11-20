@@ -31,6 +31,7 @@ public class UtilMathLong {
     }
     
     /**
+     * Uses the Pollard-Rho algorithm to produce prime factors of a given long.
      * @return a list of the prime factors of num in ascending order
      */
     private static List<Long> primeFactorizationPollardRhoPrivate(long num) {
@@ -59,9 +60,9 @@ public class UtilMathLong {
             c++;
             d = 1;
             while(d == 1) {
-                x = (x * x + c) % num;
-                y = (y * y + c) % num;
-                y = (y * y + c) % num;
+                x = (modExp(x, 2, num) + c) % num;
+                y = (modExp(y, 2, num) + c) % num;
+                y = (modExp(y, 2, num) + c) % num;
                 d = gcd(abs(x - y), num);
             }
         } while(d == num);
