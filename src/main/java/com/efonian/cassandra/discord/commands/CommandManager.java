@@ -199,7 +199,8 @@ public final class CommandManager {
                 cmd.getClass().getSimpleName(),
                 cc.event.getAuthor().getName()
         ));
-        cc.event.getChannel().sendMessage(String.format("%s timed out on task",
+        cc.event.getChannel().sendMessage(String.format("%s timed out on command %s",
+                cmd.getClass().getSimpleName().substring(4),
                 cc.event.getAuthor().getAsMention())).queue();
     }
     
