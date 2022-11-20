@@ -60,9 +60,9 @@ public class UtilMathLong {
             c++;
             d = 1;
             while(d == 1) {
-                x = (modExp(x, 2, num) + c) % num;
-                y = (modExp(y, 2, num) + c) % num;
-                y = (modExp(y, 2, num) + c) % num;
+                x = (x * x + c) % num;
+                y = (y * y + c) % num;
+                y = (y * y + c) % num;
                 d = gcd(abs(x - y), num);
             }
         } while(d == num);
@@ -116,7 +116,7 @@ public class UtilMathLong {
         
         for(long i = 0; i < k; i++) {
             long a = randomLongBoundedInc(2, num - 2);
-            if(modExp(a, num - 1, num) != 1)
+            if(modPow(a, num - 1, num) != 1)
                 return false;
         }
         return true;
@@ -142,11 +142,11 @@ public class UtilMathLong {
         
         for(long i = 0; i < k; i++) {
             long a = randomLongBoundedInc(2, num - 2);
-            long x = modExp(a, d, num);
+            long x = modPow(a, d, num);
             
             long y = 1;
             for(long j = 0; j < s; j++) {
-                y = modExp(x, 2, num);
+                y = modPow(x, 2, num);
                 if(y == 1 && x != 1 && x != num - 1)
                     return false;
                 x = y;
@@ -157,9 +157,31 @@ public class UtilMathLong {
         return true;
     }
     
-    // TODO: implement (does Java optimize?)
-    public static long modExp(long a, long b, long c) {
-        return a ^ b % c;
+    public static long modPow(long a, long b, long c) {
+        if(c <= 0)
+            throw new IllegalArgumentException("Modulus cannot be negative.");
+        if(a == 0 && b < 0)
+            throw new IllegalArgumentException("Attempted to raise zero to a negative power.");
+        
+        if(c == 1)
+            return 0;
+        if(a == 0)
+            return 0;
+        if(a == 1)
+            return 1;
+        
+        long r = 1;
+        a %= c;
+        
+        while(b > 0) {
+            if(b % 2 == 1)
+                r = (r*a) % c;
+            
+            a = (a*a) % c;
+            b >>= 1;
+        }
+        return r;
+//        return a ^ b % c;
     }
     
     /**
