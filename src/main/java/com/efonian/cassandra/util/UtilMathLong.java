@@ -31,7 +31,7 @@ public class UtilMathLong {
     }
     
     /**
-     * @return a list of the prime factors of num
+     * @return a list of the prime factors of num in ascending order
      */
     private static List<Long> primeFactorizationPollardRhoPrivate(long num) {
         List<Long> primeFactors = new ArrayList<>();
@@ -168,6 +168,19 @@ public class UtilMathLong {
         if(a == 0 && b == 0)
             return 0;
         
+        a = abs(a);
+        b = abs(b);
+        
+        if(a == 0)
+            return b;
+        else if(b == 0)
+            return a;
+        
+        if(a > b)
+            a %= b;
+        else
+            b %= a;
+    
         if(a == 0)
             return b;
         else if(b == 0)
