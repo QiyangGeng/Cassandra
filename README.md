@@ -35,7 +35,7 @@ things I could do very easily with this program due to its modularity and extens
 implement random things as needs arise.
 
 For example, one night, I found myself wanting to call one of my friends 'dum', but using a QR code. 
-The need for a QR code decoder followed thereof. 
+The need for a QR code decoder followed thereafter. 
 This lead to the command class `cmd_QRCode`, which depends on the `UtilQRCode` class to interface with the QR code
 API. All in all, they account for around a hundred lines of code, and required no modification of any other files.
 Furthermore, since I had ~~copied the provided demo to~~ implemented the `UtilQRCode` class, it was also trivial to create
@@ -155,8 +155,8 @@ This section will include major program decision changes (when I feel like it)
 
 ### Moving on from Staged Commands to Services (2021/05/29)
 
-As per what I have never mentioned before, *Cassandra* is the fifth iteration of my Discord Bot program 
-(maybe V0.5). Previous versions included implementations of "staged commands", which are similar to the basic
+*Cassandra* is the fifth iteration of my Discord Bot program (maybe V0.5). 
+Previous versions included implementations of "staged commands", which are similar to the basic
 commands, except they expect multiple inputs over time. This was fine with previous implementations of commands.
 
 However, as *Cassandra* slowly became the first iteration where I actually planned for the program components, I came to
