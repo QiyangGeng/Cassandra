@@ -9,6 +9,9 @@ import java.util.List;
 public class cmd_DecimalToFraction extends Command {
     @Override
     void execute(CommandContainer cc) {
+        if(cc.args.isEmpty())
+            throw new IllegalArgumentException();
+        
         cc.event.getChannel().sendMessage(convert(cc.args.get(0))).queue();
     }
     
