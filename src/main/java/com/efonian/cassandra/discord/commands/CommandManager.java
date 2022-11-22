@@ -133,13 +133,7 @@ public final class CommandManager {
     Command findCommandForUser(boolean isFromGuild, User user, String invoke) {
         Command foundCommand = findCommand(invoke);
         
-        if(foundCommand == null)
-            return null;
-        
-        if(CommandAccessManager.hasPermissionSimple(isFromGuild, user, foundCommand))
-            return foundCommand;
-        
-        return null;
+        return CommandAccessManager.hasPermissionSimple(isFromGuild, user, foundCommand) ? foundCommand : null;
     }
     
     /**
